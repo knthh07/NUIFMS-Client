@@ -60,7 +60,6 @@ const CreateReport = () => {
     return (
         <LocalizationProvider dateAdapter={AdapterLuxon}>
             <div className="flex">
-                <SideNav />
                 <div className="w-full">
                     <div className="w-[80%] ml-[20%] p-6">
                         <h2 className="text-2xl mb-4">Report</h2>
