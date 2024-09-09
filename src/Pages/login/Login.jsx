@@ -66,6 +66,7 @@ const Login = () => {
           if (!result.error) {
             setData({ email: '', password: '' });
             toast.success('Login Successful. Welcome!');
+            console.log('login successful');
             navigate(getDashboardPath(role));
             isLoggedIn = true;
             break;
