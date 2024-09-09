@@ -224,7 +224,7 @@ const Requests = () => {
                                     overflow: 'hidden'
                                 }}>
                                     <img
-                                        src={`http://localhost:5080/${selectedRequest.fileUrl}`}
+                                        src={`https://nuifms-predep-10ceea2df468.herokuapp.com/${selectedRequest.fileUrl}`}
                                         alt="Submitted File"
                                         style={{ width: '100%', height: 'auto' }}
                                     />
