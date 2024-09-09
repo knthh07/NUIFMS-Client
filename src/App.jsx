@@ -34,7 +34,7 @@ import UserProfile from "./User/UserProfile";
 import UserHistory from "./User/UserHistory";
 import UserTrackOrder from "./User/UserTrackOrder";
 
-axios.defaults.baseURL = 'http://localhost:5080';
+axios.defaults.baseURL = 'https://nuifms-predep-10ceea2df468.herokuapp.com';
 axios.defaults.withCredentials = true;
 
 function App() {
