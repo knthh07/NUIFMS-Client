@@ -1,15 +1,12 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import axios from 'axios';
 import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon'; // Changed adapter
+import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { TextField } from '@mui/material';
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
-
+import jsPDF from 'jspdf';
+import 'jspdf-autotable'; // Import jsPDF autoTable plugin if needed
 import SideNav from '../Components/sidenav/SideNav';
-
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const Report = () => {
     const [reportType, setReportType] = useState('day');
@@ -30,47 +27,32 @@ const Report = () => {
             });
             const requests = response.data.requests;
 
-            const docDefinition = {
-                content: [
-                    { text: 'Job Order Report', style: 'header' },
-                    { text: `Report Type: ${reportType}`, style: 'subheader' },
-                    { text: `Status: ${status || 'All'}`, style: 'subheader' },
-                    { text: `Date Range: ${dateRange || 'N/A'}`, style: 'subheader' },
-                    { text: `User ID: ${userId || 'N/A'}`, style: 'subheader' },
-                    { text: `Generated on: ${new Date().toLocaleString()}`, style: 'subheader', margin: [0, 0, 0, 20] },
-                    {
-                        table: {
-                            headerRows: 1,
-                            body: [
-                                ['ID', 'Name', 'Status', 'Date'],
-                                ...requests.map(req => [
-                                    req._id,
-                                    req.firstName + ' ' + req.lastName,
-                                    req.status,
-                                    new Date(req.createdAt).toLocaleDateString()
-                                ])
-                            ]
-                        }
-                    },
-                    { text: ' ', margin: [0, 30, 0, 0] },
-                    { text: '________________________', alignment: 'right', margin: [0, 20, 0, 0] },
-                    { text: 'Signature', alignment: 'right' }
-                ],
-                styles: {
-                    header: {
-                        fontSize: 22,
-                        bold: true,
-                        margin: [0, 0, 0, 10]
-                    },
-                    subheader: {
-                        fontSize: 14,
-                        bold: false,
-                        margin: [0, 0, 0, 5]
-                    }
-                }
-            };
+            const doc = new jsPDF();
+            doc.setFontSize(22);
+            doc.text('Job Order Report', 10, 10);
 
-            pdfMake.createPdf(docDefinition).download('Job_Order_Report.pdf');
+            doc.setFontSize(14);
+            doc.text(`Report Type: ${reportType}`, 10, 20);
+            doc.text(`Status: ${status || 'All'}`, 10, 30);
+            doc.text(`Date Range: ${dateRange || 'N/A'}`, 10, 40);
+            doc.text(`User ID: ${userId || 'N/A'}`, 10, 50);
+            doc.text(`Generated on: ${new Date().toLocaleString()}`, 10, 60);
+
+            doc.autoTable({
+                startY: 70,
+                head: [['ID', 'Name', 'Status', 'Date']],
+                body: requests.map(req => [
+                    req._id,
+                    `${req.firstName} ${req.lastName}`,
+                    req.status,
+                    new Date(req.createdAt).toLocaleDateString()
+                ])
+            });
+
+            doc.text('________________________', 180, doc.autoTable.previous.finalY + 10, { align: 'right' });
+            doc.text('Signature', 180, doc.autoTable.previous.finalY + 20, { align: 'right' });
+
+            doc.save('Job_Order_Report.pdf');
         } catch (error) {
             console.error('Error generating report:', error);
         }
