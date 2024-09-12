@@ -1,32 +1,34 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { TextField, Box, Button } from "@mui/material";
+import { TextField, Box, Button, IconButton, InputAdornment } from "@mui/material";
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { toast } from 'react-hot-toast';
 import backgroundImage from '../assets/img/jhocsonPic.jpg'; // Update the path to your background image
-
 
 const ResetPassword = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [otp, setOtp] = useState('');
     const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [message, setMessage] = useState('');
 
-    const handleEmailChange = (e) => {
-        setEmail(e.target.value);
-    };
-
-    const handleOtpChange = (e) => {
-        setOtp(e.target.value);
-    };
-
-    const handleNewPasswordChange = (e) => {
-        setNewPassword(e.target.value);
-    };
+    const handleEmailChange = (e) => setEmail(e.target.value);
+    const handleOtpChange = (e) => setOtp(e.target.value);
+    const handleNewPasswordChange = (e) => setNewPassword(e.target.value);
+    const handleConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
+    const toggleShowPassword = () => setShowPassword(!showPassword);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (newPassword !== confirmPassword) {
+            setMessage('Passwords do not match.');
+            return;
+        }
+
         try {
             const response = await axios.post('/api/reset-password', { email, otp, newPassword });
             if (response.status === 200) {
@@ -53,24 +55,13 @@ const ResetPassword = () => {
                                 variant="filled"
                                 label="Email"
                                 fullWidth
-                                InputLabelProps={{
-                                    style: { color: 'white' },
-                                }}
+                                InputLabelProps={{ style: { color: 'white' } }}
                                 sx={{
                                     input: { color: 'white' },
-                                    '& .MuiFilledInput-root': {
-                                        backgroundColor: 'transparent',
-                                        borderBottom: '1px solid white',
-                                    },
-                                    '& .Mui-focused .MuiFilledInput-input': {
-                                        backgroundColor: 'transparent',
-                                    },
-                                    '& .Mui-focused': {
-                                        borderColor: 'white',
-                                    },
-                                    '& .MuiInputLabel-root.Mui-focused': {
-                                        color: 'white',
-                                    }
+                                    '& .MuiFilledInput-root': { backgroundColor: 'transparent', borderBottom: '1px solid white' },
+                                    '& .Mui-focused .MuiFilledInput-input': { backgroundColor: 'transparent' },
+                                    '& .Mui-focused': { borderColor: 'white' },
+                                    '& .MuiInputLabel-root.Mui-focused': { color: 'white' }
                                 }}
                                 value={email}
                                 onChange={handleEmailChange}
@@ -79,24 +70,13 @@ const ResetPassword = () => {
                                 variant="filled"
                                 label="Enter OTP"
                                 fullWidth
-                                InputLabelProps={{
-                                    style: { color: 'white' },
-                                }}
+                                InputLabelProps={{ style: { color: 'white' } }}
                                 sx={{
                                     input: { color: 'white' },
-                                    '& .MuiFilledInput-root': {
-                                        backgroundColor: 'transparent',
-                                        borderBottom: '1px solid white',
-                                    },
-                                    '& .Mui-focused .MuiFilledInput-input': {
-                                        backgroundColor: 'transparent',
-                                    },
-                                    '& .Mui-focused': {
-                                        borderColor: 'white',
-                                    },
-                                    '& .MuiInputLabel-root.Mui-focused': {
-                                        color: 'white',
-                                    }
+                                    '& .MuiFilledInput-root': { backgroundColor: 'transparent', borderBottom: '1px solid white' },
+                                    '& .Mui-focused .MuiFilledInput-input': { backgroundColor: 'transparent' },
+                                    '& .Mui-focused': { borderColor: 'white' },
+                                    '& .MuiInputLabel-root.Mui-focused': { color: 'white' }
                                 }}
                                 value={otp}
                                 onChange={handleOtpChange}
@@ -104,29 +84,52 @@ const ResetPassword = () => {
                             <TextField
                                 variant="filled"
                                 label="New Password"
-                                type="password"
+                                type={showPassword ? 'text' : 'password'}
                                 fullWidth
-                                InputLabelProps={{
-                                    style: { color: 'white' },
-                                }}
+                                InputLabelProps={{ style: { color: 'white' } }}
                                 sx={{
                                     input: { color: 'white' },
-                                    '& .MuiFilledInput-root': {
-                                        backgroundColor: 'transparent',
-                                        borderBottom: '1px solid white',
-                                    },
-                                    '& .Mui-focused .MuiFilledInput-input': {
-                                        backgroundColor: 'transparent',
-                                    },
-                                    '& .Mui-focused': {
-                                        borderColor: 'white',
-                                    },
-                                    '& .MuiInputLabel-root.Mui-focused': {
-                                        color: 'white',
-                                    }
+                                    '& .MuiFilledInput-root': { backgroundColor: 'transparent', borderBottom: '1px solid white' },
+                                    '& .Mui-focused .MuiFilledInput-input': { backgroundColor: 'transparent' },
+                                    '& .Mui-focused': { borderColor: 'white' },
+                                    '& .MuiInputLabel-root.Mui-focused': { color: 'white' }
                                 }}
                                 value={newPassword}
                                 onChange={handleNewPasswordChange}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton onClick={toggleShowPassword} edge="end">
+                                                {showPassword ? <VisibilityOff sx={{ color: 'white' }} /> : <Visibility sx={{ color: 'white' }} />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    )
+                                }}
+                            />
+                            <TextField
+                                variant="filled"
+                                label="Confirm Password"
+                                type={showPassword ? 'text' : 'password'}
+                                fullWidth
+                                InputLabelProps={{ style: { color: 'white' } }}
+                                sx={{
+                                    input: { color: 'white' },
+                                    '& .MuiFilledInput-root': { backgroundColor: 'transparent', borderBottom: '1px solid white' },
+                                    '& .Mui-focused .MuiFilledInput-input': { backgroundColor: 'transparent' },
+                                    '& .Mui-focused': { borderColor: 'white' },
+                                    '& .MuiInputLabel-root.Mui-focused': { color: 'white' }
+                                }}
+                                value={confirmPassword}
+                                onChange={handleConfirmPasswordChange}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton onClick={toggleShowPassword} edge="end">
+                                                {showPassword ? <VisibilityOff sx={{ color: 'white' }} /> : <Visibility sx={{ color: 'white' }} />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    )
+                                }}
                             />
                         </div>
                         <Button type="submit" variant="contained" color="primary" fullWidth className="mt-4">
