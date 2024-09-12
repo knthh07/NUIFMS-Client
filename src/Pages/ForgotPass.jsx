@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { TextField, Box, Button } from "@mui/material";
+import { TextField, Box, Button, IconButton, InputAdornment } from "@mui/material";
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import signupLogoSrc from '../assets/img/nu_logo.png';
 import backgroundImage from '../assets/img/jhocsonPic.jpg'; // Update the path to your background image
 
@@ -14,6 +15,10 @@ const ForgotPassword = () => {
     const [message, setMessage] = useState('');
     const [showOtpInput, setShowOtpInput] = useState(false);
     const [showPasswordInput, setShowPasswordInput] = useState(false);
+
+    // States for showing/hiding passwords
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
@@ -159,7 +164,7 @@ const ForgotPassword = () => {
                                     <TextField
                                         variant="filled"
                                         label="New Password"
-                                        type="password"
+                                        type={showNewPassword ? 'text' : 'password'}
                                         fullWidth
                                         InputLabelProps={{
                                             style: { color: 'white' },
@@ -182,6 +187,19 @@ const ForgotPassword = () => {
                                         }}
                                         value={newPassword}
                                         onChange={handleNewPasswordChange}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <IconButton
+                                                        aria-label="toggle password visibility"
+                                                        onClick={() => setShowNewPassword(!showNewPassword)}
+                                                        edge="end"
+                                                    >
+                                                        {showNewPassword ? <VisibilityOff /> : <Visibility />}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            )
+                                        }}
                                     />
                                 </div>
 
@@ -189,7 +207,7 @@ const ForgotPassword = () => {
                                     <TextField
                                         variant="filled"
                                         label="Confirm Password"
-                                        type="password"
+                                        type={showConfirmPassword ? 'text' : 'password'}
                                         fullWidth
                                         InputLabelProps={{
                                             style: { color: 'white' },
@@ -212,6 +230,19 @@ const ForgotPassword = () => {
                                         }}
                                         value={confirmPassword}
                                         onChange={handleConfirmPasswordChange}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <IconButton
+                                                        aria-label="toggle password visibility"
+                                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                                        edge="end"
+                                                    >
+                                                        {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            )
+                                        }}
                                     />
                                 </div>
                             </>
