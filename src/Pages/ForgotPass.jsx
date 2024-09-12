@@ -10,6 +10,7 @@ const ForgotPassword = () => {
     const [email, setEmail] = useState('');
     const [otp, setOtp] = useState('');
     const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState(''); // State for confirm password
     const [message, setMessage] = useState('');
     const [showOtpInput, setShowOtpInput] = useState(false);
     const [showPasswordInput, setShowPasswordInput] = useState(false);
@@ -24,6 +25,10 @@ const ForgotPassword = () => {
 
     const handleNewPasswordChange = (e) => {
         setNewPassword(e.target.value);
+    };
+
+    const handleConfirmPasswordChange = (e) => {
+        setConfirmPassword(e.target.value);
     };
 
     const handleSubmit = async (e) => {
@@ -59,6 +64,11 @@ const ForgotPassword = () => {
 
     const handlePasswordSubmit = async (e) => {
         e.preventDefault();
+        if (newPassword !== confirmPassword) { // Validate passwords
+            setMessage('Passwords do not match');
+            return;
+        }
+
         try {
             const response = await axios.post('/api/reset-password', { email, otp, newPassword });
             if (response.status === 200) {
@@ -144,35 +154,67 @@ const ForgotPassword = () => {
                         )}
 
                         {showPasswordInput && (
-                            <div className="space-y-4">
-                                <TextField
-                                    variant="filled"
-                                    label="New Password"
-                                    type="password"
-                                    fullWidth
-                                    InputLabelProps={{
-                                        style: { color: 'white' },
-                                    }}
-                                    sx={{
-                                        input: { color: 'white' },
-                                        '& .MuiFilledInput-root': {
-                                            backgroundColor: 'transparent',
-                                            borderBottom: '1px solid white',
-                                        },
-                                        '& .Mui-focused .MuiFilledInput-input': {
-                                            backgroundColor: 'transparent',
-                                        },
-                                        '& .Mui-focused': {
-                                            borderColor: 'white',
-                                        },
-                                        '& .MuiInputLabel-root.Mui-focused': {
-                                            color: 'white',
-                                        }
-                                    }}
-                                    value={newPassword}
-                                    onChange={handleNewPasswordChange}
-                                />
-                            </div>
+                            <>
+                                <div className="space-y-4">
+                                    <TextField
+                                        variant="filled"
+                                        label="New Password"
+                                        type="password"
+                                        fullWidth
+                                        InputLabelProps={{
+                                            style: { color: 'white' },
+                                        }}
+                                        sx={{
+                                            input: { color: 'white' },
+                                            '& .MuiFilledInput-root': {
+                                                backgroundColor: 'transparent',
+                                                borderBottom: '1px solid white',
+                                            },
+                                            '& .Mui-focused .MuiFilledInput-input': {
+                                                backgroundColor: 'transparent',
+                                            },
+                                            '& .Mui-focused': {
+                                                borderColor: 'white',
+                                            },
+                                            '& .MuiInputLabel-root.Mui-focused': {
+                                                color: 'white',
+                                            }
+                                        }}
+                                        value={newPassword}
+                                        onChange={handleNewPasswordChange}
+                                    />
+                                </div>
+
+                                <div className="space-y-4">
+                                    <TextField
+                                        variant="filled"
+                                        label="Confirm Password"
+                                        type="password"
+                                        fullWidth
+                                        InputLabelProps={{
+                                            style: { color: 'white' },
+                                        }}
+                                        sx={{
+                                            input: { color: 'white' },
+                                            '& .MuiFilledInput-root': {
+                                                backgroundColor: 'transparent',
+                                                borderBottom: '1px solid white',
+                                            },
+                                            '& .Mui-focused .MuiFilledInput-input': {
+                                                backgroundColor: 'transparent',
+                                            },
+                                            '& .Mui-focused': {
+                                                borderColor: 'white',
+                                            },
+                                            '& .MuiInputLabel-root.Mui-focused': {
+                                                color: 'white',
+                                            }
+                                        }}
+                                        value={confirmPassword}
+                                        onChange={handleConfirmPasswordChange}
+                                    />
+                                </div>
+                            </>
                         )}
 
                         <Button type="submit" variant="contained" color="primary" fullWidth className="mt-4">
