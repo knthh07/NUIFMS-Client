@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { TextField, Box, Button } from "@mui/material";
 import { toast } from 'react-hot-toast';
+import backgroundImage from '../assets/img/jhocsonPic.jpg'; // Update the path to your background image
+
 
 const ResetPassword = () => {
     const navigate = useNavigate();
@@ -41,7 +43,7 @@ const ResetPassword = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-[#ffffff]">
+        <div className="min-h-screen flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: `url(${backgroundImage})` }}>
             <div className="bg-[#35408e] p-8 rounded-2xl shadow-md w-full max-w-md">
                 <Box component="form" autoComplete="off" noValidate onSubmit={handleSubmit}>
                     <div id="input" className="space-y-6">
