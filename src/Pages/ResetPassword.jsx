@@ -43,7 +43,7 @@ const ResetPassword = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: `url(${backgroundImage})` }}>
+        <div className="flex flex-col items-center justify-center min-h-screen" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
             <div className="bg-[#35408e] p-8 rounded-2xl shadow-md w-full max-w-md">
                 <Box component="form" autoComplete="off" noValidate onSubmit={handleSubmit}>
                     <div id="input" className="space-y-6">
