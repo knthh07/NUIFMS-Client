@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { TextField, Box, Button } from "@mui/material";
 import signupLogoSrc from '../assets/img/nu_logo.png';
+import backgroundImage from '../assets/img/jhocsonPic.jpg'; // Update the path to your background image
 
 const ForgotPassword = () => {
     const navigate = useNavigate();
@@ -72,7 +73,7 @@ const ForgotPassword = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-[#ffffff]">
+        <div className="min-h-screen flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: `url(${backgroundImage})` }}>
             <div className="bg-[#35408e] p-8 rounded-2xl shadow-md w-full max-w-md">
                 <div className="flex justify-center mb-6">
                     <img src={signupLogoSrc} alt="NU LOGO" className="w-36 h-auto" />
