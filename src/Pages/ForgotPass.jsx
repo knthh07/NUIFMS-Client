@@ -194,6 +194,7 @@ const ForgotPassword = () => {
                                                         aria-label="toggle password visibility"
                                                         onClick={() => setShowNewPassword(!showNewPassword)}
                                                         edge="end"
+                                                        style={{ color: "white" }}
                                                     >
                                                         {showNewPassword ? <VisibilityOff /> : <Visibility />}
                                                     </IconButton>
@@ -237,6 +238,7 @@ const ForgotPassword = () => {
                                                         aria-label="toggle password visibility"
                                                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                                         edge="end"
+                                                        style={{ color: "white" }}
                                                     >
                                                         {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                                                     </IconButton>
