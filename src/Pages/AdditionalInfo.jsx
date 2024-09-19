@@ -10,6 +10,8 @@ const AdditionalInfo = () => {
   const navigate = useNavigate();
 
   const [data, setData] = useState({
+    firstName: '',
+    lastName: '',
     dept: '',
     position: '',
     idNum1: '',
@@ -26,25 +28,20 @@ const AdditionalInfo = () => {
   const UserAddInfo = async (e) => {
     e.preventDefault();
 
-    const { dept, position, idNum1, idNum2 } = data;
+    const { firstName, lastName, dept, position, idNum1, idNum2 } = data;
 
     console.log('Submitting form', data);
 
     try {
-      // Ensure idNum1 and idNum2 are valid before sending request
-      if (!/^\d{2}$/.test(idNum1) || !/^\d{4}$/.test(idNum2)) {
-        toast.error('ID Numbers must be in the correct format.');
-        return;
-      }
 
       const response = await axios.post('/api/addInfo', {
-        dept, position, idNum1, idNum2
+        firstName, lastName, dept, position, idNum1, idNum2
       });
       const result = response.data;
       if (result.error) {
         toast.error(result.error);
       } else {
-        setData({ dept: '', position: '', idNum1: '', idNum2: '' });
+        setData({ firstName: '', lastName: '', dept: '', position: '', idNum1: '', idNum2: '' });
         toast.success('Additional Information Submitted!');
         navigate('/login');
       }
@@ -64,6 +61,63 @@ const AdditionalInfo = () => {
           <div id="input" className="space-y-6">
             <h1 className="text-2xl font-bold underline text-white text-center">Additional Information</h1>
             <div className="space-y-4">
+
+              <TextField
+                variant='filled'
+                label='First Name'
+                fullWidth
+                InputLabelProps={{
+                  style: { color: 'white' },
+                }}
+                sx={{
+                  input: { color: 'white' },
+                  '& .MuiFilledInput-root': {
+                    backgroundColor: 'transparent',
+                    borderBottom: '1px solid white',
+                  },
+                  '& .Mui-focused .MuiFilledInput-input': {
+                    backgroundColor: 'transparent',
+                  },
+                  '& .Mui-focused': {
+                    borderColor: 'white',
+                  },
+                  '& .MuiInputLabel-root.Mui-focused': {
+                    color: 'white',
+                  }
+                }}
+                value={data.firstName}
+                required
+                onChange={(e) => setData({ ...data, firstName: e.target.value })}
+              />
+
+              <TextField
+                variant='filled'
+                label='Last Name'
+                fullWidth
+                InputLabelProps={{
+                  style: { color: 'white' },
+                }}
+                sx={{
+                  input: { color: 'white' },
+                  '& .MuiFilledInput-root': {
+                    backgroundColor: 'transparent',
+                    borderBottom: '1px solid white',
+                  },
+                  '& .Mui-focused .MuiFilledInput-input': {
+                    backgroundColor: 'transparent',
+                  },
+                  '& .Mui-focused': {
+                    borderColor: 'white',
+                  },
+                  '& .MuiInputLabel-root.Mui-focused': {
+                    color: 'white',
+                  }
+                }}
+                value={data.lastName}
+                required
+                onChange={(e) => setData({ ...data, lastName: e.target.value })}
+              />
+
               <FormControl variant="filled" fullWidth>
                 <InputLabel style={{ color: 'white' }}>Department</InputLabel>
                 <Select

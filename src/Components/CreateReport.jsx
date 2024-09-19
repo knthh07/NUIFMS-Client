@@ -5,6 +5,7 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { TextField } from '@mui/material';
 import jsPDF from 'jspdf';
+import 'jspdf-autotable'; // Import the plugin here
 import SideNav from '../Components/sidenav/SideNav';
 
 const CreateReport = () => {

@@ -121,6 +121,10 @@ const data = {
     },
 };
 
+const jobOrderTypes = ['Maintenance', 'Borrowing', 'Repair', 'Installation']; // Dropdown for Job Order Types
+const scenarios = ['Broken', 'Busted', 'Slippery', 'Leaking']; // Dropdown for Scenario
+const objects = ['Computer', 'Floor', 'Door', 'Chair', 'Window']; // Dropdown for Object
+
 const JobOrderForm = () => {
     const [jobOrder, setJobOrder] = useState({
         firstName: '',
@@ -133,6 +137,10 @@ const JobOrderForm = () => {
         position: '',
         jobDesc: '',
         file: null,
+        jobType: '', // New State for Job Order Type
+        scenario: '', // New State for Scenario
+        object: '', // New State for Object
+        dateOfRequest: '', // New state for Date of Request
     });
 
     const [buildings, setBuildings] = useState([]);
@@ -190,14 +198,13 @@ const JobOrderForm = () => {
     const submitJobOrder = useCallback(async (e) => {
         e.preventDefault();
 
-        const { firstName, lastName, reqOffice, campus, building, floor, room, position, jobDesc, file } = jobOrder;
+        const { firstName, lastName, reqOffice, campus, building, floor, room, position, jobDesc, file, jobType, scenario, object, dateOfRequest } = jobOrder;
 
         // Sanitize job description
         const sanitizedJobDesc = DOMPurify.sanitize(jobDesc);
 
-        if (!firstName || !lastName || !reqOffice || !campus || !position || !sanitizedJobDesc) {
+        if (!firstName || !lastName || !reqOffice || !campus || !position || !sanitizedJobDesc || !jobType || !dateOfRequest) {
             return toast.error('All required fields must be filled out.');
-
         }
 
         try {
@@ -211,12 +218,14 @@ const JobOrderForm = () => {
             formData.append('room', room);
             formData.append('position', position);
             formData.append('jobDesc', sanitizedJobDesc); // Use sanitized job description
+            formData.append('jobType', jobType); // Add job type
+            formData.append('scenario', scenario); // Add scenario
+            formData.append('object', object); // Add object
+            formData.append('dateOfRequest', dateOfRequest); // New state for Date of Request
 
             if (file) {
                 formData.append('file', file);
             }
-
-            console.log(file)
 
             const response = await axios.post('/api/addJobOrder', formData);
 
@@ -225,7 +234,7 @@ const JobOrderForm = () => {
             if (data.error) {
                 toast.error(result.error);
             } else {
-                setJobOrder(prev => ({ ...prev, reqOffice: '', campus: '', building: '', floor: '', room: '', jobDesc: '', file: null }));
+                setJobOrder(prev => ({ ...prev, reqOffice: '', campus: '', building: '', floor: '', room: '', jobDesc: '', file: null, jobType: '', scenario: '', object: '' }));
                 toast.success('Job Order Submitted');
             }
         } catch (error) {
@@ -238,9 +247,21 @@ const JobOrderForm = () => {
 
     return (
         <Box component="form" autoComplete='off' noValidate onSubmit={submitJobOrder} encType='multipart/form-data'>
-            <div className="flex justify-center items-center">
-                <div className="w-[77%] ml-[20%] mt-3 bg-white rounded-lg shadow-md p-8 space-y-4">
-                    <Typography variant="h6">Job Order</Typography>
+            <div className="flex">
+                <div className="w-[80%] ml-[20%] p-6 space-y-4">
+                    <Typography variant="h5" gutterBottom>Job Order</Typography>
+
+                    {/* Job Order Type Dropdown */}
+                    <TextField
+                        select label="Job Order Type" variant="outlined" fullWidth required size="small"
+                        value={jobOrder.jobType} onChange={(e) => setJobOrder({ ...jobOrder, jobType: e.target.value })}
+                    >
+                        {jobOrderTypes.map((type) => (
+                            <MenuItem key={type} value={type}>
+                                {type}
+                            </MenuItem>
+                        ))}
+                    </TextField>
 
                     <TextField
                         select label="Requesting Office/College" variant="outlined" fullWidth required size="small"
@@ -270,6 +291,19 @@ const JobOrderForm = () => {
                             const [firstName, lastName] = e.target.value.split(' ');
                             setJobOrder({ ...jobOrder, firstName, lastName });
                         }}
+                    />
+
+                    <TextField
+                        label="Date of Request"
+                        type="date"
+                        fullWidth
+                        required
+                        size="small"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        value={jobOrder.dateOfRequest}
+                        onChange={(e) => setJobOrder({ ...jobOrder, dateOfRequest: e.target.value })}
                     />
 
                     <Box display="flex" gap={2} mb={2}>
@@ -319,6 +353,42 @@ const JobOrderForm = () => {
                             setJobOrder({ ...jobOrder, position });
                         }}
                     />
+
+
+                    {/* Additional dropdowns for Scenario and Object */}
+                    <Box display="flex" gap={2} mb={2}>
+                        <TextField
+                            select 
+                            label="Scenario" 
+                            variant="outlined" 
+                            fullWidth  
+                            size="small"
+                            value={jobOrder.scenario} 
+                            onChange={(e) => setJobOrder({ ...jobOrder, scenario: e.target.value })}
+                        >
+                            {scenarios.map((scenario) => (
+                                <MenuItem key={scenario} value={scenario}>
+                                    {scenario}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+
+                        <TextField
+                            select label="Object" 
+                            variant="outlined" 
+                            fullWidth  
+                            size="small"
+                            value={jobOrder.object} 
+                            onChange={(e) => setJobOrder({ ...jobOrder, object: e.target.value })}
+                        >
+                            {objects.map((object) => (
+                                <MenuItem key={object} value={object}>
+                                    {object}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    </Box>
+
 
                     <Box>
                         <TextField

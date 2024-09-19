@@ -23,8 +23,6 @@ const Signup = () => {
   };
 
   const [data, setData] = useState({
-    firstName: '',
-    lastName: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -45,20 +43,13 @@ const Signup = () => {
 
   const registerUser = async (e) => {
     e.preventDefault();
-    const { firstName, lastName, email, password, confirmPassword } = data;
+    const { email, password, confirmPassword } = data;
 
     const sanitizedData = {
-      firstName: DOMPurify.sanitize(firstName),
-      lastName: DOMPurify.sanitize(lastName),
       email: DOMPurify.sanitize(email),
       password: DOMPurify.sanitize(password),
       confirmPassword: DOMPurify.sanitize(confirmPassword),
     };
-
-    if (firstName.length > 16 || lastName.length > 16) {
-      toast.error('First Name and Last Name must be 16 characters or fewer');
-      return;
-    }
 
     if (password !== confirmPassword) {
       toast.error('Passwords do not match');
@@ -72,8 +63,9 @@ const Signup = () => {
       if (result.error) {
         toast.error(result.error);
       } else {
-        setData({ firstName: '', lastName: '', email: '', password: '', confirmPassword: '' });
+        setData({email: '', password: '', confirmPassword: '' });
         toast.success('Register Successful. Welcome!');
+        console.log(data);
         navigate('/addInfo');
       }
     } catch (error) {
@@ -92,61 +84,6 @@ const Signup = () => {
           <div id="input" className="space-y-6">
             <h1 className="text-2xl font-bold text-white text-center">Register</h1>
             <div className="space-y-4">
-              <TextField
-                variant='filled'
-                label='First Name'
-                fullWidth
-                InputLabelProps={{
-                  style: { color: 'white' },
-                }}
-                sx={{
-                  input: { color: 'white' },
-                  '& .MuiFilledInput-root': {
-                    backgroundColor: 'transparent',
-                    borderBottom: '1px solid white',
-                  },
-                  '& .Mui-focused .MuiFilledInput-input': {
-                    backgroundColor: 'transparent',
-                  },
-                  '& .Mui-focused': {
-                    borderColor: 'white',
-                  },
-                  '& .MuiInputLabel-root.Mui-focused': {
-                    color: 'white',
-                  }
-                }}
-                value={data.firstName}
-                required
-                onChange={(e) => setData({ ...data, firstName: DOMPurify.sanitize(e.target.value) })}
-              />
-
-              <TextField
-                variant='filled'
-                label='Last Name'
-                fullWidth
-                InputLabelProps={{
-                  style: { color: 'white' },
-                }}
-                sx={{
-                  input: { color: 'white' },
-                  '& .MuiFilledInput-root': {
-                    backgroundColor: 'transparent',
-                    borderBottom: '1px solid white',
-                  },
-                  '& .Mui-focused .MuiFilledInput-input': {
-                    backgroundColor: 'transparent',
-                  },
-                  '& .Mui-focused': {
-                    borderColor: 'white',
-                  },
-                  '& .MuiInputLabel-root.Mui-focused': {
-                    color: 'white',
-                  }
-                }}
-                value={data.lastName}
-                required
-                onChange={(e) => setData({ ...data, lastName: DOMPurify.sanitize(e.target.value) })}
-              />
 
               <TextField
                 variant='filled'

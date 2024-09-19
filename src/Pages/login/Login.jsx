@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IconButton, InputAdornment, TextField, Box } from "@mui/material";
 import { Visibility, VisibilityOff, MailOutline, LockOutlined } from '@mui/icons-material';
 import { toast } from 'react-hot-toast';
+import { AuthContext } from '../../context/AuthContext';
 import DOMPurify from 'dompurify';
 import './login.css';
 import axios from 'axios';
@@ -10,6 +11,7 @@ import signupLogoSrc from '../../assets/img/nu_logo.png';
 import backgroundImage from '../../assets/img/jhocsonPic.jpg'; // Update the path to your background image
 
 const Login = () => {
+  const { setProfile, setRole } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
   const [emailError, setEmailError] = useState('');
   const navigate = useNavigate();
@@ -39,45 +41,26 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Sanitize inputs
     const email = DOMPurify.sanitize(data.email);
     const password = DOMPurify.sanitize(data.password);
 
     try {
-      // Validate email and password
       if (!email || !password) {
         toast.error('Email and password are required');
         return;
       }
 
-      const loginEndpoints = [
-        { endpoint: '/api/login', role: 'user' },
-        { endpoint: '/api/loginAdmin', role: 'admin' },
-        { endpoint: '/api/loginSuperAdmin', role: 'superAdmin' },
-      ];
+      const { data } = await axios.post('/api/login', { email, password });
 
-      let isLoggedIn = false;
+      if (data.error) {
+        toast.error(data.error);
+      } else {
+        setProfile(data.user);
+        setRole(data.role);
 
-      for (const { endpoint, role } of loginEndpoints) {
-        try {
-          const response = await axios.post(endpoint, { email, password });
-          const result = response.data;
-
-          if (!result.error) {
-            setData({ email: '', password: '' });
-            toast.success('Login Successful. Welcome!');
-            console.log('login successful');
-            navigate(getDashboardPath(role));
-            isLoggedIn = true;
-            break;
-          }
-        } catch (error) {
-          console.error(`Error logging in to ${endpoint}:`, error.response ? error.response.data : error.message);
-        }
-      }
-
-      if (!isLoggedIn) {
-        toast.error('Invalid credentials or server error. Please try again.');
+        // Get the correct dashboard path based on the role
+        const dashboardPath = getDashboardPath(data.role);
+        navigate(dashboardPath); // Dynamically navigate to the appropriate dashboard
       }
     } catch (error) {
       console.error('Error logging in:', error.response ? error.response.data : error.message);
@@ -97,7 +80,7 @@ const Login = () => {
         return '/';
     }
   };
-
+  
   return (
     <div className="min-h-screen flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: `url(${backgroundImage})` }}>
       <div className="bg-[#35408e] p-8 rounded-lg shadow-lg max-w-md w-full">

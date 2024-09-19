@@ -28,7 +28,6 @@ const JobOrderTracking = () => {
     const handleOpenTrackingModal = async (order) => {
         try {
             const response = await axios.get(`/api/jobOrders/${order._id}/tracking`, { withCredentials: true });
-            console.log('Tracking Updates:', response.data.jobOrder.tracking); // Check the data structure
             setSelectedOrder({ ...order, tracking: response.data.jobOrder.tracking });
             setTrackingModalOpen(true);
         } catch (error) {
@@ -189,7 +188,12 @@ const JobOrderTracking = () => {
                                     <Typography variant="body1"><b>Campus:</b>{selectedOrder?.campus}</Typography>
                                     <Typography variant="body1"><b>Building:</b>{selectedOrder?.building}</Typography>
                                     <Typography variant="body1"><b>Floor:</b>{selectedOrder?.floor}</Typography>
-                                    <Typography variant="body1"><b>Room:</b>{selectedOrder?.room}</Typography>
+                                    <Typography variant="body1"><b>Office:</b>{selectedOrder?.room}</Typography>
+                                    <Typography variant="body1"><b>From:</b>{selectedOrder?.dateFrom.split('T')[0]}</Typography>
+                                    <Typography variant="body1"><b>To:</b>{selectedOrder?.dateTo.split('T')[0]}</Typography>
+                                    <Typography variant="body1"><b>Cost Required:</b>{selectedOrder?.costRequired}</Typography>
+                                    <Typography variant="body1"><b>Charge To:</b>{selectedOrder?.chargeTo}</Typography>
+
 
                                 </Box>
                                 <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>

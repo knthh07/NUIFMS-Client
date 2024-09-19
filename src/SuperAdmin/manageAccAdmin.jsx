@@ -113,6 +113,7 @@ const SuperAdminManagementPage = () => {
                                             <TableCell>Email</TableCell>
                                             <TableCell>Position</TableCell>
                                             <TableCell>Department</TableCell>
+                                            <TableCell>Role</TableCell>
                                             <TableCell>Actions</TableCell>
                                         </TableRow>
                                     </TableHead>
@@ -124,6 +125,7 @@ const SuperAdminManagementPage = () => {
                                                 <TableCell>{user.email}</TableCell>
                                                 <TableCell>{user.position}</TableCell>
                                                 <TableCell>{user.dept}</TableCell>
+                                                <TableCell>{user.role}</TableCell>
                                                 <TableCell>
                                                     <IconButton onClick={() => { setSelectedEntity(user); setOpenDeleteDialog(true); setEntityType('user'); }}><Delete /></IconButton>
                                                 </TableCell>
@@ -146,6 +148,9 @@ const SuperAdminManagementPage = () => {
                                             <TableCell>ID</TableCell>
                                             <TableCell>Name</TableCell>
                                             <TableCell>Email</TableCell>
+                                            <TableCell>Position</TableCell>
+                                            <TableCell>Department</TableCell>
+                                            <TableCell>Role</TableCell>
                                             <TableCell>Actions</TableCell>
                                         </TableRow>
                                     </TableHead>
@@ -155,7 +160,9 @@ const SuperAdminManagementPage = () => {
                                                 <TableCell>{admin.idNum}</TableCell>
                                                 <TableCell>{admin.firstName} {admin.lastName}</TableCell>
                                                 <TableCell>{admin.email}</TableCell>
+                                                <TableCell>{admin.position}</TableCell>
                                                 <TableCell>{admin.dept}</TableCell>
+                                                <TableCell>{admin.role}</TableCell>
                                                 <TableCell>
                                                     <IconButton onClick={() => { setSelectedEntity(admin); setOpenDeleteDialog(true); setEntityType('admin'); }}><Delete /></IconButton>
                                                 </TableCell>
