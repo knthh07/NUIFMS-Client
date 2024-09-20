@@ -35,6 +35,7 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [emailError, setEmailError] = useState('');
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const resetState = () => {
         setStep(1);
@@ -87,6 +88,7 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
 
     const handleNextStep = async () => {
         if (step === 1) {
+            setLoading(true); // set loading state
             if (firstName.length > 16 || lastName.length > 16) {
                 toast.error('First Name and Last Name must be 16 characters or fewer');
                 return;
@@ -111,38 +113,49 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
                 if (response.data.error) {
                     setError(response.data.error);
                 } else {
+                    setLoading(false); // set loading state
                     setStep(2);
                     setError("");
                 }
             } catch (error) {
-                console.error("Error adding user:", error);
+                console.error("Error adding user info:", error);
+                toast.error("Failed to add user. Please try again.");
             }
+
         } else if (step === 2) {
             try {
+                if (!dept || !position) {
+                    toast.error('Please select a department and position.');
+                    return;
+                }
+
+                setLoading(true); // set loading state
 
                 const sanitizedData = {
                     firstName: DOMPurify.sanitize(firstName),
                     lastName: DOMPurify.sanitize(lastName),
                     email: DOMPurify.sanitize(email),
-                    dept: DOMPurify.sanitize(password),
+                    dept: DOMPurify.sanitize(dept),
                     position: DOMPurify.sanitize(position),
                     idNum1: DOMPurify.sanitize(idNum1),
                     idNum2: DOMPurify.sanitize(idNum2),
 
                 };
 
-
                 const response = await axios.post("/api/addUserInfo", sanitizedData);
                 if (response.data.error) {
                     setError(response.data.error);
                 } else {
+                    setLoading(false); // set loading state
                     onUserAdded();
                     onClose();
                     resetState();
                 }
             } catch (error) {
                 console.error("Error adding user info:", error);
+                toast.error("Failed to add user. Please try again.");
             }
+
         }
     };
 
@@ -216,7 +229,7 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
                                 endAdornment: (
                                     <InputAdornment position="end">
                                         <IconButton
-                                            aria-label="toggle password visibility"
+                                            aria-label={showPassword ? "Hide password" : "Show password"}
                                             onClick={toggleShowPassword}
                                             edge="end"
                                             style={{ color: "black" }} // Change the icon color to black
@@ -260,7 +273,7 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
                                 endAdornment: (
                                     <InputAdornment position="end">
                                         <IconButton
-                                            aria-label="toggle password visibility"
+                                            aria-label={showPassword ? "Hide password" : "Show password"}
                                             onClick={toggleShowConfirmPassword}
                                             edge="end"
                                             style={{ color: "black" }}
@@ -438,9 +451,10 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose}>Cancel</Button>
-                <Button onClick={handleNextStep} variant="contained" color="primary">
-                    {step === 1 ? "Next" : "Submit"}
+                <Button onClick={handleNextStep} variant="contained" color="primary" disabled={loading}>
+                    {loading ? "Loading..." : step === 1 ? "Next" : "Submit"}
                 </Button>
+
             </DialogActions>
         </Dialog>
     );
