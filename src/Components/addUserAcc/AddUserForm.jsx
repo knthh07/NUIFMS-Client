@@ -12,7 +12,6 @@ import {
     InputLabel,
     IconButton,
     InputAdornment,
-    Box
 } from "@mui/material";
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import axios from "axios";
@@ -34,8 +33,6 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [emailError, setEmailError] = useState('');
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
 
     const resetState = () => {
         setStep(1);
@@ -52,7 +49,6 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
         setShowPassword(false);
         setShowConfirmPassword(false);
         setEmailError('');
-        setError("");
     };
 
     const toggleShowPassword = () => {
@@ -88,7 +84,6 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
 
     const handleNextStep = async () => {
         if (step === 1) {
-            setLoading(true); // set loading state
             if (firstName.length > 16 || lastName.length > 16) {
                 toast.error('First Name and Last Name must be 16 characters or fewer');
                 return;
@@ -96,6 +91,8 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
 
             if (password !== confirmPassword) {
                 toast.error('Passwords do not match');
+                setPassword("");
+                setConfirmPassword("");
                 return;
             }
 
@@ -111,11 +108,9 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
 
                 const response = await axios.post("/api/addUser", sanitizedData);
                 if (response.data.error) {
-                    setError(response.data.error);
+                    toast.error(response.data.error);
                 } else {
-                    setLoading(false); // set loading state
                     setStep(2);
-                    setError("");
                 }
             } catch (error) {
                 console.error("Error adding user info:", error);
@@ -129,8 +124,6 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
                     return;
                 }
 
-                setLoading(true); // set loading state
-
                 const sanitizedData = {
                     firstName: DOMPurify.sanitize(firstName),
                     lastName: DOMPurify.sanitize(lastName),
@@ -139,14 +132,12 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
                     position: DOMPurify.sanitize(position),
                     idNum1: DOMPurify.sanitize(idNum1),
                     idNum2: DOMPurify.sanitize(idNum2),
-
                 };
 
                 const response = await axios.post("/api/addUserInfo", sanitizedData);
                 if (response.data.error) {
-                    setError(response.data.error);
+                    toast.error(response.data.error);
                 } else {
-                    setLoading(false); // set loading state
                     onUserAdded();
                     onClose();
                     resetState();
@@ -155,7 +146,6 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
                 console.error("Error adding user info:", error);
                 toast.error("Failed to add user. Please try again.");
             }
-
         }
     };
 
@@ -163,16 +153,13 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
         <Dialog open={open} onClose={onClose} sx={sx}>
             <DialogTitle>{step === 1 ? "Register User" : "Add Additional Info"}</DialogTitle>
             <DialogContent>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
                 {step === 1 ? (
                     <>
                         <TextField
                             variant='filled'
                             label='Email'
                             fullWidth
-                            InputLabelProps={{
-                                style: { color: 'black' },
-                            }}
+                            InputLabelProps={{ style: { color: 'black' } }}
                             sx={{
                                 input: { color: 'black' },
                                 '& .MuiFilledInput-root': {
@@ -222,9 +209,7 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
                             variant='filled'
                             type={showPassword ? 'text' : 'password'}
                             label='Password'
-                            InputLabelProps={{
-                                style: { color: 'black' },
-                            }}
+                            InputLabelProps={{ style: { color: 'black' } }}
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
@@ -232,7 +217,7 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
                                             aria-label={showPassword ? "Hide password" : "Show password"}
                                             onClick={toggleShowPassword}
                                             edge="end"
-                                            style={{ color: "black" }} // Change the icon color to black
+                                            style={{ color: "black" }}
                                         >
                                             {showPassword ? <VisibilityOff style={{ color: 'black' }} /> : <Visibility style={{ color: 'black' }} />}
                                         </IconButton>
@@ -266,9 +251,7 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
                             label='Confirm Password'
                             type={showConfirmPassword ? 'text' : 'password'}
                             fullWidth
-                            InputLabelProps={{
-                                style: { color: 'black' },
-                            }}
+                            InputLabelProps={{ style: { color: 'black' } }}
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
@@ -306,62 +289,6 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
                     </>
                 ) : (
                     <>
-                        <TextField
-                            variant='filled'
-                            label='First Name'
-                            fullWidth
-                            InputLabelProps={{
-                                style: { color: 'black' },
-                            }}
-                            sx={{
-                                input: { color: 'black' },
-                                '& .MuiFilledInput-root': {
-                                    backgroundColor: 'transparent',
-                                    borderBottom: '1px solid black',
-                                },
-                                '& .Mui-focused .MuiFilledInput-input': {
-                                    backgroundColor: 'transparent',
-                                },
-                                '& .Mui-focused': {
-                                    borderColor: 'black',
-                                },
-                                '& .MuiInputLabel-root.Mui-focused': {
-                                    color: 'black',
-                                }
-                            }}
-                            value={firstName}
-                            required
-                            onChange={(e) => setFirstName(DOMPurify.sanitize(e.target.value))}
-                        />
-
-                        <TextField
-                            variant='filled'
-                            label='Last Name'
-                            fullWidth
-                            InputLabelProps={{
-                                style: { color: 'black' },
-                            }}
-                            sx={{
-                                input: { color: 'black' },
-                                '& .MuiFilledInput-root': {
-                                    backgroundColor: 'transparent',
-                                    borderBottom: '1px solid black',
-                                },
-                                '& .Mui-focused .MuiFilledInput-input': {
-                                    backgroundColor: 'transparent',
-                                },
-                                '& .Mui-focused': {
-                                    borderColor: 'black',
-                                },
-                                '& .MuiInputLabel-root.Mui-focused': {
-                                    color: 'black',
-                                }
-                            }}
-                            value={lastName}
-                            required
-                            onChange={(e) => setLastName(DOMPurify.sanitize(e.target.value))}
-                        />
-
                         <FormControl variant="filled" fullWidth>
                             <InputLabel style={{ color: 'black' }}>Department</InputLabel>
                             <Select
@@ -379,10 +306,9 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
                                 onChange={(e) => setDept(e.target.value)}
                             >
                                 <MenuItem value=""><em>None</em></MenuItem>
-                                <MenuItem sx={{ color: 'black' }} value="CCIT">CCIT</MenuItem>
-                                <MenuItem sx={{ color: 'black' }} value="CBA">CBA</MenuItem>
-                                <MenuItem sx={{ color: 'black' }} value="COAH">COAH</MenuItem>
-                                <MenuItem sx={{ color: 'black' }} value="COE">COE</MenuItem>
+                                <MenuItem sx={{ color: 'black' }} value="Department1">Department 1</MenuItem>
+                                <MenuItem sx={{ color: 'black' }} value="Department2">Department 2</MenuItem>
+                                {/* Add more departments as needed */}
                             </Select>
                         </FormControl>
 
@@ -403,58 +329,39 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
                                 onChange={(e) => setPosition(e.target.value)}
                             >
                                 <MenuItem value=""><em>None</em></MenuItem>
-                                <MenuItem sx={{ color: 'black' }} value="ASP">ASP</MenuItem>
-                                <MenuItem sx={{ color: 'black' }} value="Faculty">Faculty</MenuItem>
-                                <MenuItem sx={{ color: 'black' }} value="Facilities Employee">Facilities Employee</MenuItem>
+                                <MenuItem sx={{ color: 'black' }} value="Position1">Position 1</MenuItem>
+                                <MenuItem sx={{ color: 'black' }} value="Position2">Position 2</MenuItem>
+                                {/* Add more positions as needed */}
                             </Select>
                         </FormControl>
 
-                        <div className="flex space-x-2">
-                            <TextField
-                                variant='filled'
-                                label='ID Number 1'
-                                fullWidth
-                                InputLabelProps={{ style: { color: 'black' } }}
-                                sx={{
-                                    input: { color: 'black' },
-                                    '& .MuiFilledInput-root': { backgroundColor: 'transparent', borderBottom: '1px solid black' },
-                                    '& .Mui-focused .MuiFilledInput-input': { backgroundColor: 'transparent' },
-                                    '& .Mui-focused': { borderColor: 'black' },
-                                    '& .MuiInputLabel-root.Mui-focused': { color: 'black' }
-                                }}
-                                name="idNum1"
-                                value={idNum1}
-                                required
-                                onChange={handleIdNumChange}
-                            />
+                        <TextField
+                            variant='filled'
+                            label='ID Number 1'
+                            fullWidth
+                            InputLabelProps={{ style: { color: 'black' } }}
+                            value={idNum1}
+                            onChange={handleIdNumChange}
+                            name="idNum1"
+                            inputProps={{ maxLength: 2 }}
+                        />
 
-                            <TextField
-                                variant='filled'
-                                label='ID Number 2'
-                                fullWidth
-                                InputLabelProps={{ style: { color: 'black' } }}
-                                sx={{
-                                    input: { color: 'black' },
-                                    '& .MuiFilledInput-root': { backgroundColor: 'transparent', borderBottom: '1px solid black' },
-                                    '& .Mui-focused .MuiFilledInput-input': { backgroundColor: 'transparent' },
-                                    '& .Mui-focused': { borderColor: 'black' },
-                                    '& .MuiInputLabel-root.Mui-focused': { color: 'black' }
-                                }}
-                                name="idNum2"
-                                value={idNum2}
-                                required
-                                onChange={handleIdNumChange}
-                            />
-                        </div>
+                        <TextField
+                            variant='filled'
+                            label='ID Number 2'
+                            fullWidth
+                            InputLabelProps={{ style: { color: 'black' } }}
+                            value={idNum2}
+                            onChange={handleIdNumChange}
+                            name="idNum2"
+                            inputProps={{ maxLength: 4 }}
+                        />
                     </>
                 )}
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose}>Cancel</Button>
-                <Button onClick={handleNextStep} variant="contained" color="primary" disabled={loading}>
-                    {loading ? "Loading..." : step === 1 ? "Next" : "Submit"}
-                </Button>
-
+                <Button onClick={handleNextStep}>{step === 1 ? "Next" : "Submit"}</Button>
             </DialogActions>
         </Dialog>
     );
