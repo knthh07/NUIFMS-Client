@@ -21,6 +21,7 @@ import { toast } from 'react-hot-toast';
 
 const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
     const [step, setStep] = useState(1);
+    const [role, setRole] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -37,6 +38,7 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
 
     const resetState = () => {
         setStep(1);
+        setRole("");
         setFirstName("");
         setLastName("");
         setEmail("");
@@ -97,6 +99,7 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
 
             try {
                 const sanitizedData = {
+                    role: DOMPurify.sanitize(role),
                     firstName: DOMPurify.sanitize(firstName),
                     lastName: DOMPurify.sanitize(lastName),
                     email: DOMPurify.sanitize(email),
@@ -152,62 +155,6 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
                     <>
                         <TextField
                             variant='filled'
-                            label='First Name'
-                            fullWidth
-                            InputLabelProps={{
-                                style: { color: 'black' },
-                            }}
-                            sx={{
-                                input: { color: 'black' },
-                                '& .MuiFilledInput-root': {
-                                    backgroundColor: 'transparent',
-                                    borderBottom: '1px solid black',
-                                },
-                                '& .Mui-focused .MuiFilledInput-input': {
-                                    backgroundColor: 'transparent',
-                                },
-                                '& .Mui-focused': {
-                                    borderColor: 'black',
-                                },
-                                '& .MuiInputLabel-root.Mui-focused': {
-                                    color: 'black',
-                                }
-                            }}
-                            value={firstName}
-                            required
-                            onChange={(e) => setFirstName(DOMPurify.sanitize(e.target.value))}
-                        />
-
-                        <TextField
-                            variant='filled'
-                            label='Last Name'
-                            fullWidth
-                            InputLabelProps={{
-                                style: { color: 'black' },
-                            }}
-                            sx={{
-                                input: { color: 'black' },
-                                '& .MuiFilledInput-root': {
-                                    backgroundColor: 'transparent',
-                                    borderBottom: '1px solid black',
-                                },
-                                '& .Mui-focused .MuiFilledInput-input': {
-                                    backgroundColor: 'transparent',
-                                },
-                                '& .Mui-focused': {
-                                    borderColor: 'black',
-                                },
-                                '& .MuiInputLabel-root.Mui-focused': {
-                                    color: 'black',
-                                }
-                            }}
-                            value={lastName}
-                            required
-                            onChange={(e) => setLastName(DOMPurify.sanitize(e.target.value))}
-                        />
-
-                        <TextField
-                            variant='filled'
                             label='Email'
                             fullWidth
                             InputLabelProps={{
@@ -235,6 +182,28 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
                             error={!!emailError}
                             helperText={emailError}
                         />
+
+                        <FormControl variant="filled" fullWidth>
+                            <InputLabel style={{ color: 'black' }}>Role</InputLabel>
+                            <Select
+                                sx={{
+                                    '.MuiSelect-filled': { color: 'black' },
+                                    '.MuiSelect-icon': { color: 'black' },
+                                    backgroundColor: 'transparent',
+                                    borderBottom: '1px solid black',
+                                    '& .Mui-focused .MuiSelect-filled': { backgroundColor: 'transparent' },
+                                    '& .Mui-focused': { borderColor: 'black' },
+                                    '& .MuiInputLabel-root.Mui-focused': { color: 'black' },
+                                }}
+                                value={role}
+                                required
+                                onChange={(e) => setRole(e.target.value)}
+                            >
+                                <MenuItem value=""><em>None</em></MenuItem>
+                                <MenuItem sx={{ color: 'black' }} value="user">Set as User</MenuItem>
+                                <MenuItem sx={{ color: 'black' }} value="admin">Set as Admin</MenuItem>
+                            </Select>
+                        </FormControl>
 
                         <TextField
                             variant='filled'
@@ -324,6 +293,62 @@ const AddUserForm = ({ open, onClose, onUserAdded, sx }) => {
                     </>
                 ) : (
                     <>
+                        <TextField
+                            variant='filled'
+                            label='First Name'
+                            fullWidth
+                            InputLabelProps={{
+                                style: { color: 'black' },
+                            }}
+                            sx={{
+                                input: { color: 'black' },
+                                '& .MuiFilledInput-root': {
+                                    backgroundColor: 'transparent',
+                                    borderBottom: '1px solid black',
+                                },
+                                '& .Mui-focused .MuiFilledInput-input': {
+                                    backgroundColor: 'transparent',
+                                },
+                                '& .Mui-focused': {
+                                    borderColor: 'black',
+                                },
+                                '& .MuiInputLabel-root.Mui-focused': {
+                                    color: 'black',
+                                }
+                            }}
+                            value={firstName}
+                            required
+                            onChange={(e) => setFirstName(DOMPurify.sanitize(e.target.value))}
+                        />
+
+                        <TextField
+                            variant='filled'
+                            label='Last Name'
+                            fullWidth
+                            InputLabelProps={{
+                                style: { color: 'black' },
+                            }}
+                            sx={{
+                                input: { color: 'black' },
+                                '& .MuiFilledInput-root': {
+                                    backgroundColor: 'transparent',
+                                    borderBottom: '1px solid black',
+                                },
+                                '& .Mui-focused .MuiFilledInput-input': {
+                                    backgroundColor: 'transparent',
+                                },
+                                '& .Mui-focused': {
+                                    borderColor: 'black',
+                                },
+                                '& .MuiInputLabel-root.Mui-focused': {
+                                    color: 'black',
+                                }
+                            }}
+                            value={lastName}
+                            required
+                            onChange={(e) => setLastName(DOMPurify.sanitize(e.target.value))}
+                        />
+
                         <FormControl variant="filled" fullWidth>
                             <InputLabel style={{ color: 'black' }}>Department</InputLabel>
                             <Select
