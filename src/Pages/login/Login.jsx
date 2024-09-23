@@ -194,13 +194,13 @@ const Login = () => {
             </div>
             <div className="flex justify-between mt-4">
               <label className="text-white flex items-center"></label>
-              <a href="/forgotPass" className="text-yellow-500">Forgot password?</a>
+              <a href="/forgotPass" className="text-bright-yellow ml-1">Forgot password?</a>
             </div>
-            <button type='submit' className="bg-[#5cb85c] text-white rounded-md cursor-pointer block py-2 px-8 mx-auto mt-6 hover:bg-[#449D44]">LOG IN</button>
+            <button type='submit' className="bg-green text-white rounded-md cursor-pointer block py-2 px-8 mx-auto mt-6 hover:bg-darkgreen">LOG IN</button>
             <p className="mt-6 text-white text-center">
               Don't have an account?
-              <a href="/signup" className="text-yellow-500 ml-1">Sign up here</a>
-            </p>
+              <a href="/signup" className="text-bright-yellow ml-1">Sign up here</a>
+              </p>
           </div>
         </Box>
       </div>
