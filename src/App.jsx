@@ -7,7 +7,6 @@ import { AuthContextProvider } from './context/AuthContext';
 import Login from './Pages/login/Login';
 import Signup from './Pages/Signup';
 import ForgotPass from './Pages/ForgotPass';
-import ResetPassword from './Pages/ResetPassword';
 import AddInfo from './Pages/AdditionalInfo';
 
 import Dashboard from './Pages/Dashboard';
@@ -51,7 +50,6 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgotPass" element={<ForgotPass />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/addInfo" element={<AddInfo />} />
 
