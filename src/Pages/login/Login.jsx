@@ -7,8 +7,8 @@ import { AuthContext } from '../../context/AuthContext';
 import DOMPurify from 'dompurify';
 import './login.css';
 import axios from 'axios';
-import signupLogoSrc from '../../assets/img/nu_logo.png'; // WebP format
-import backgroundImage from '../../assets/img/jhocsonPic.jpg'; // WebP format
+import signupLogoSrc from '../../assets/img/nu_logo.png';
+import backgroundImage from '../../assets/img/jhocsonPic.jpg'; // Update the path to your background image
 
 const Login = () => {
   const { setProfile, setRole } = useContext(AuthContext);
@@ -29,6 +29,7 @@ const Login = () => {
     const email = e.target.value;
     setData({ ...data, email });
 
+    // Regex to check if email matches the specified domain
     const emailDomainRegex = /^[a-zA-Z0-9._%+-]+@(students|faculty|admin)\.national-u\.edu\.ph$/;
     if (!emailDomainRegex.test(email)) {
       setEmailError('Please provide a valid email.');
@@ -57,8 +58,9 @@ const Login = () => {
         setProfile(data.user);
         setRole(data.role);
 
+        // Get the correct dashboard path based on the role
         const dashboardPath = getDashboardPath(data.role);
-        navigate(dashboardPath);
+        navigate(dashboardPath); // Dynamically navigate to the appropriate dashboard
       }
     } catch (error) {
       console.error('Error logging in:', error.response ? error.response.data : error.message);
@@ -78,12 +80,12 @@ const Login = () => {
         return '/';
     }
   };
-
+  
   return (
     <div className="min-h-screen flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: `url(${backgroundImage})` }}>
       <div className="bg-[#35408e] p-8 rounded-lg shadow-lg max-w-md w-full">
         <div className="flex justify-center mb-6">
-          <img src={signupLogoSrc} alt="NU LOGO" className="w-36 h-auto" width="144" height="auto" />
+          <img src={signupLogoSrc} alt="NU LOGO" className="w-36 h-auto" />
         </div>
         <Box component="form" autoComplete='off' noValidate onSubmit={handleLogin}>
           <div id="input" className="space-y-6">
@@ -192,12 +194,12 @@ const Login = () => {
             </div>
             <div className="flex justify-between mt-4">
               <label className="text-white flex items-center"></label>
-              <a href="/forgotPass" className="text-yellow-400 underline">Forgot password?</a>
+              <a href="/forgotPass" className="text-yellow-500">Forgot password?</a>
             </div>
-            <button type='submit' className="bg-green-600 text-white rounded-md cursor-pointer block py-2 px-8 mx-auto mt-6 hover:bg-green-700">LOG IN</button>
+            <button type='submit' className="bg-[#5cb85c] text-white rounded-md cursor-pointer block py-2 px-8 mx-auto mt-6 hover:bg-[#449D44]">LOG IN</button>
             <p className="mt-6 text-white text-center">
               Don't have an account?
-              <a href="/signup" className="text-yellow-400 underline ml-1">Sign up here</a>
+              <a href="/signup" className="text-yellow-500 ml-1">Sign up here</a>
             </p>
           </div>
         </Box>
