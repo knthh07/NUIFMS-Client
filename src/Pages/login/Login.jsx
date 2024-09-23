@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IconButton, InputAdornment, TextField, Box } from "@mui/material";
 import { Visibility, VisibilityOff, MailOutline, LockOutlined } from '@mui/icons-material';
@@ -7,8 +7,8 @@ import { AuthContext } from '../../context/AuthContext';
 import DOMPurify from 'dompurify';
 import './login.css';
 import axios from 'axios';
-import signupLogoSrc from '../../assets/img/nu_logo.png';
-import backgroundImage from '../../assets/img/jhocsonPic.jpg'; // Update the path to your background image
+import signupLogoSrc from '../../assets/img/nu_logo.webp'; // Updated to WebP format
+import backgroundImage from '../../assets/img/jhocsonPic.webp'; // Updated to WebP format
 
 const Login = () => {
   const { setProfile, setRole } = useContext(AuthContext);
@@ -85,7 +85,7 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: `url(${backgroundImage})` }}>
       <div className="bg-[#35408e] p-8 rounded-lg shadow-lg max-w-md w-full">
         <div className="flex justify-center mb-6">
-          <img src={signupLogoSrc} alt="NU LOGO" className="w-36 h-auto" />
+          <img src={signupLogoSrc} alt="NU LOGO" className="w-36 h-auto" width="144" height="auto" />
         </div>
         <Box component="form" autoComplete='off' noValidate onSubmit={handleLogin}>
           <div id="input" className="space-y-6">
