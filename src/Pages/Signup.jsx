@@ -230,16 +230,25 @@ const Signup = () => {
             border: '2px solid #000',
             boxShadow: 24,
             padding: 20,
-            maxHeight: '70vh',
-            overflowY: 'auto'
+            maxHeight: '50vh', // Set maximum height for scrollable behavior
+            overflowY: 'auto',  // Enable vertical scroll if content exceeds height
           }}
-          ref={termsRef}
-          onScroll={handleScroll}>
+            ref={termsRef}
+            onScroll={handleScroll}>
             <h2>Terms and Conditions</h2>
-            <p>[Insert your terms and conditions here]</p>
+            <p>['Welcome to NUIFMS! This privacy policy explains how we collect, use, disclose, and protect your personal information. 
+              By using our app/website, you agree to the practices described in this policy.
+              \n\nPersonal Information: This may include your name, email address, phone number, and any other information you provide directly.
+              \n\nUsage Data: Information about how you use our app/website, including your IP address, browser type, and pages visited.
+              \n\nWe implement reasonable security measures to protect your personal information from unauthorized access, alteration, disclosure, or destruction. 
+              However, no data transmission over the internet or electronic storage system is 100% secure.
+              \n\nWe may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on our app/website. 
+              Your continued use of our services after such changes indicates your acceptance of the updated policy]</p>
+            <p>[Insert more text or dummy content to make it longer if needed]</p>
             <Button onClick={handleAccept} disabled={!hasScrolledToEnd}>I Accept</Button>
           </div>
         </Modal>
+
       </div>
     </div>
   );
