@@ -91,7 +91,23 @@ const Signup = () => {
                 onChange={handleEmailChange}
                 error={!!emailError}
                 helperText={emailError}
-                sx={{ input: { color: 'white' }, '& .MuiFilledInput-root': { borderBottom: '1px solid white' } }}
+                sx={{
+                  input: {
+                    color: 'white',
+                    backgroundColor: '#1b1b38',
+                    borderRadius: '5px'
+                  },
+                  '& .MuiFilledInput-root': {
+                    backgroundColor: '#1b1b38',
+                    borderBottom: '1px solid white',
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: 'white'
+                  },
+                  '& .MuiFormHelperText-root': {
+                    color: '#FF9494'
+                  }
+                }}
               />
               <TextField
                 variant='filled'
@@ -109,6 +125,20 @@ const Signup = () => {
                     </InputAdornment>
                   ),
                 }}
+                sx={{
+                  input: {
+                    color: 'white',
+                    backgroundColor: '#1b1b38',
+                    borderRadius: '5px'
+                  },
+                  '& .MuiFilledInput-root': {
+                    backgroundColor: '#1b1b38',
+                    borderBottom: '1px solid white',
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: 'white'
+                  }
+                }}
               />
               <TextField
                 variant='filled'
@@ -125,6 +155,20 @@ const Signup = () => {
                       </IconButton>
                     </InputAdornment>
                   ),
+                }}
+                sx={{
+                  input: {
+                    color: 'white',
+                    backgroundColor: '#1b1b38',
+                    borderRadius: '5px'
+                  },
+                  '& .MuiFilledInput-root': {
+                    backgroundColor: '#1b1b38',
+                    borderBottom: '1px solid white',
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: 'white'
+                  }
                 }}
               />
             </div>
@@ -148,14 +192,16 @@ const Signup = () => {
             overflowY: 'auto',
           }}>
             <h2>Terms and Conditions</h2>
-            <p>[ <p>['Welcome to NUIFMS! This privacy policy explains how we collect, use, disclose, and protect your personal information. 
+            <p>[
+              'Welcome to NUIFMS! This privacy policy explains how we collect, use, disclose, and protect your personal information.
               By using our app/website, you agree to the practices described in this policy.
               nPersonal Information: This may include your name, email address, phone number, and any other information you provide directly.
               nUsage Data: Information about how you use our app/website, including your IP address, browser type, and pages visited.
-              nWe implement reasonable security measures to protect your personal information from unauthorized access, alteration, disclosure, or destruction. 
+              nWe implement reasonable security measures to protect your personal information from unauthorized access, alteration, disclosure, or destruction.
               However, no data transmission over the internet or electronic storage system is 100% secure.
-              We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on our app/website. 
-              Your continued use of our services after such changes indicates your acceptance of the updated policy]</p>]</p>
+              We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on our app/website.
+              Your continued use of our services after such changes indicates your acceptance of the updated policy
+              ]</p>
             <Button onClick={handleAccept} style={{ backgroundColor: '#5cb85c', color: 'white' }}>Accept</Button>
             <Button onClick={handleRefuse} style={{ backgroundColor: '#d9534f', color: 'white', marginLeft: '10px' }}>Refuse</Button>
           </div>
@@ -166,3 +212,5 @@ const Signup = () => {
 };
 
 export default Signup;
+
+
