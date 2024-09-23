@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { IconButton, InputAdornment, TextField, Box, Modal, Button, Checkbox, FormControlLabel } from "@mui/material";
+import React, { useState, useRef } from "react";
+import { IconButton, InputAdornment, TextField, Box, Modal, Button } from "@mui/material";
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -12,9 +12,10 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [emailError, setEmailError] = useState('');
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [hasAccepted, setHasAccepted] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [hasScrolledToEnd, setHasScrolledToEnd] = useState(false);
+  const [isAccepted, setIsAccepted] = useState(false);
+  const termsRef = useRef(null);
   const navigate = useNavigate();
 
   const toggleShowPassword = () => {
@@ -43,30 +44,28 @@ const Signup = () => {
     }
   };
 
-  const handleOpenModal = () => setModalOpen(true);
-  const handleCloseModal = () => setModalOpen(false);
-
-  const handleScroll = (e) => {
-    const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-    if (bottom) setHasScrolledToEnd(true);
-  };
-
   const registerUser = async (e) => {
     e.preventDefault();
     const { email, password, confirmPassword } = data;
+
+    if (!isAccepted) {
+      toast.error('Please accept the terms and conditions.');
+      return;
+    }
 
     if (password !== confirmPassword) {
       toast.error('Passwords do not match');
       return;
     }
 
-    if (!hasAccepted) {
-      toast.error('You must accept the terms and conditions.');
-      return;
-    }
+    const sanitizedData = {
+      email: DOMPurify.sanitize(email),
+      password: DOMPurify.sanitize(password),
+      confirmPassword: DOMPurify.sanitize(confirmPassword),
+    };
 
     try {
-      const response = await axios.post('/api/signup', { email, password, confirmPassword });
+      const response = await axios.post('/api/signup', sanitizedData);
 
       const result = response.data;
       if (result.error) {
@@ -82,6 +81,27 @@ const Signup = () => {
     }
   };
 
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setHasScrolledToEnd(false);
+  };
+
+  const handleScroll = () => {
+    const termsEl = termsRef.current;
+    if (termsEl.scrollHeight - termsEl.scrollTop === termsEl.clientHeight) {
+      setHasScrolledToEnd(true);
+    }
+  };
+
+  const handleAccept = () => {
+    setIsAccepted(true);
+    handleCloseModal();
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
       <div className="bg-[#35408e] p-8 rounded-2xl shadow-md w-full max-w-md">
@@ -92,14 +112,11 @@ const Signup = () => {
           <div id="input" className="space-y-6">
             <h1 className="text-2xl font-bold text-white text-center">Register</h1>
             <div className="space-y-4">
-
               <TextField
                 variant='filled'
                 label='Email'
                 fullWidth
-                InputLabelProps={{
-                  style: { color: 'white' },
-                }}
+                InputLabelProps={{ style: { color: 'white' } }}
                 sx={{
                   input: { color: 'white' },
                   '& .MuiFilledInput-root': {
@@ -112,9 +129,7 @@ const Signup = () => {
                   '& .Mui-focused': {
                     borderColor: 'white',
                   },
-                  '& .MuiInputLabel-root.Mui-focused': {
-                    color: 'white',
-                  }
+                  '& .MuiInputLabel-root.Mui-focused': { color: 'white' }
                 }}
                 value={data.email}
                 required
@@ -127,9 +142,8 @@ const Signup = () => {
                 variant='filled'
                 type={showPassword ? 'text' : 'password'}
                 label='Password'
-                InputLabelProps={{
-                  style: { color: 'white' },
-                }}
+                fullWidth
+                InputLabelProps={{ style: { color: 'white' } }}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
@@ -144,7 +158,6 @@ const Signup = () => {
                     </InputAdornment>
                   ),
                 }}
-                fullWidth
                 sx={{
                   input: { color: 'white' },
                   '& .MuiFilledInput-root': {
@@ -154,12 +167,8 @@ const Signup = () => {
                   '& .Mui-focused .MuiFilledInput-input': {
                     backgroundColor: 'transparent',
                   },
-                  '& .Mui-focused': {
-                    borderColor: 'white',
-                  },
-                  '& .MuiInputLabel-root.Mui-focused': {
-                    color: 'white',
-                  }
+                  '& .Mui-focused': { borderColor: 'white' },
+                  '& .MuiInputLabel-root.Mui-focused': { color: 'white' }
                 }}
                 value={data.password}
                 required
@@ -171,9 +180,7 @@ const Signup = () => {
                 label='Confirm Password'
                 type={showConfirmPassword ? 'text' : 'password'}
                 fullWidth
-                InputLabelProps={{
-                  style: { color: 'white' },
-                }}
+                InputLabelProps={{ style: { color: 'white' } }}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
@@ -197,63 +204,40 @@ const Signup = () => {
                   '& .Mui-focused .MuiFilledInput-input': {
                     backgroundColor: 'transparent',
                   },
-                  '& .Mui-focused': {
-                    borderColor: 'white',
-                  },
-                  '& .MuiInputLabel-root.Mui-focused': {
-                    color: 'white',
-                  }
+                  '& .Mui-focused': { borderColor: 'white' },
+                  '& .MuiInputLabel-root.Mui-focused': { color: 'white' }
                 }}
                 value={data.confirmPassword}
                 required
                 onChange={(e) => setData({ ...data, confirmPassword: DOMPurify.sanitize(e.target.value) })}
               />
 
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={hasAccepted}
-                    onChange={() => setHasAccepted(!hasAccepted)}
-                    disabled={!hasScrolledToEnd}
-                  />
-                }
-                label={
-                  <span className="text-white">
-                    I agree to the{' '}
-                    <button onClick={handleOpenModal} style={{ color: 'blue', textDecoration: 'underline' }}>
-                      Terms and Conditions
-                    </button>
-                  </span>
-                }
-              />
+              <button type='button' className="bg-blue-600 text-white border-none rounded-md cursor-pointer block py-2 px-8 mx-auto hover:bg-blue-500" onClick={handleOpenModal}>View Terms & Conditions</button>
 
-              <button type='submit' className="bg-[#5cb85c] text-white border-none rounded-md cursor-pointer block py-2 px-8 mx-auto hover:bg-[#449D44]" disabled={!hasAccepted}>
-                Sign Up
-              </button>
-
-              <p className="mt-6 text-white font-Arial text-center text-sm">
-                Already have an account?
-                <a href="/login" className="ml-2 text-white text-bold hover:text-gray-500 font-semi-bold underline">Login</a>
-              </p>
+              <button type='submit' className="bg-[#5cb85c] text-white border-none rounded-md cursor-pointer block py-2 px-8 mx-auto hover:bg-[#449D44]">Sign Up</button>
             </div>
           </div>
         </Box>
 
-        {/* Modal for Terms and Conditions */}
         <Modal open={isModalOpen} onClose={handleCloseModal}>
-          <div className="modal-content" style={{ maxWidth: '500px', margin: '100px auto', padding: '20px', backgroundColor: 'white', borderRadius: '10px' }}>
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            backgroundColor: 'white',
+            border: '2px solid #000',
+            boxShadow: 24,
+            padding: 20,
+            maxHeight: '70vh',
+            overflowY: 'auto'
+          }}
+          ref={termsRef}
+          onScroll={handleScroll}>
             <h2>Terms and Conditions</h2>
-            <div className="modal-body" onScroll={handleScroll} style={{ maxHeight: '300px', overflowY: 'auto' }}>
-              {/* Add your full terms and conditions here */}
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum id ligula felis euismod semper.</p>
-              <p>Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>
-              <p>Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
-              <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et.</p>
-              <p>Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
-            </div>
-            <Button disabled={!hasScrolledToEnd} onClick={handleCloseModal} style={{ marginTop: '20px' }}>
-              I Accept
-            </Button>
+            <p>[Insert your terms and conditions here]</p>
+            <Button onClick={handleAccept} disabled={!hasScrolledToEnd}>I Accept</Button>
           </div>
         </Modal>
       </div>
