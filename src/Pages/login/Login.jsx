@@ -1,4 +1,4 @@
-import React, { useState, useContext, Suspense } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IconButton, InputAdornment, TextField, Box } from "@mui/material";
 import { Visibility, VisibilityOff, MailOutline, LockOutlined } from '@mui/icons-material';
@@ -7,8 +7,8 @@ import { AuthContext } from '../../context/AuthContext';
 import DOMPurify from 'dompurify';
 import './login.css';
 import axios from 'axios';
-import signupLogoSrc from '../../assets/img/nu_logo.png'; // Updated to WebP format
-import backgroundImage from '../../assets/img/jhocsonPic.jpg'; // Updated to WebP format
+import signupLogoSrc from '/assets/img/nu_logo.png';
+import backgroundImage from '/assets/img/jhocsonPic.jpg'; 
 
 const Login = () => {
   const { setProfile, setRole } = useContext(AuthContext);
@@ -29,7 +29,6 @@ const Login = () => {
     const email = e.target.value;
     setData({ ...data, email });
 
-    // Regex to check if email matches the specified domain
     const emailDomainRegex = /^[a-zA-Z0-9._%+-]+@(students|faculty|admin)\.national-u\.edu\.ph$/;
     if (!emailDomainRegex.test(email)) {
       setEmailError('Please provide a valid email.');
@@ -58,9 +57,8 @@ const Login = () => {
         setProfile(data.user);
         setRole(data.role);
 
-        // Get the correct dashboard path based on the role
         const dashboardPath = getDashboardPath(data.role);
-        navigate(dashboardPath); // Dynamically navigate to the appropriate dashboard
+        navigate(dashboardPath); 
       }
     } catch (error) {
       console.error('Error logging in:', error.response ? error.response.data : error.message);
@@ -83,9 +81,9 @@ const Login = () => {
   
   return (
     <div className="min-h-screen flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: `url(${backgroundImage})` }}>
-      <div className="bg-[#35408e] p-8 rounded-lg shadow-lg max-w-md w-full">
+      <div className="bg-green p-8 rounded-lg shadow-lg max-w-md w-full">
         <div className="flex justify-center mb-6">
-          <img src={signupLogoSrc} alt="NU LOGO" className="w-36 h-auto" width="144" height="auto" />
+          <img src={signupLogoSrc} alt="NU LOGO" className="w-36 h-auto" />
         </div>
         <Box component="form" autoComplete='off' noValidate onSubmit={handleLogin}>
           <div id="input" className="space-y-6">
@@ -110,24 +108,6 @@ const Login = () => {
                   '& .MuiFilledInput-root': {
                     backgroundColor: 'transparent',
                     borderBottom: '1px solid white',
-                  },
-                  '& .MuiFilledInput-root::before': {
-                    borderBottom: '1px solid white',
-                  },
-                  '& .MuiFilledInput-root::after': {
-                    borderBottom: '1px solid white',
-                  },
-                  '& .MuiInputLabel-root': {
-                    color: 'white',
-                    transform: 'translate(40px, 25px) scale(1)',
-                  },
-                  '& .MuiInputLabel-root.Mui-focused': {
-                    color: 'white',
-                    transform: 'translate(13px, 4px) scale(0.75)',
-                  },
-                  '& .MuiInputLabel-root.MuiFormLabel-filled': {
-                    color: 'white',
-                    transform: 'translate(13px, 4px) scale(0.75)',
                   },
                 }}
                 value={data.email}
@@ -165,28 +145,6 @@ const Login = () => {
                 fullWidth
                 sx={{
                   input: { color: 'white' },
-                  '& .MuiFilledInput-root': {
-                    backgroundColor: 'transparent',
-                    borderBottom: '1px solid white',
-                  },
-                  '& .MuiFilledInput-root::before': {
-                    borderBottom: '1px solid white',
-                  },
-                  '& .MuiFilledInput-root::after': {
-                    borderBottom: '1px solid white',
-                  },
-                  '& .MuiInputLabel-root': {
-                    color: 'white',
-                    transform: 'translate(40px, 25px) scale(1)',
-                  },
-                  '& .MuiInputLabel-root.Mui-focused': {
-                    color: 'white',
-                    transform: 'translate(15px, 4px) scale(0.75)',
-                  },
-                  '& .MuiInputLabel-root.MuiFormLabel-filled': {
-                    color: 'white',
-                    transform: 'translate(15px, 4px) scale(0.75)',
-                  },
                 }}
                 value={data.password}
                 onChange={(e) => setData({ ...data, password: e.target.value })}
@@ -194,13 +152,13 @@ const Login = () => {
             </div>
             <div className="flex justify-between mt-4">
               <label className="text-white flex items-center"></label>
-              <a href="/forgotPass" className="text-bright-yellow ml-1">Forgot password?</a>
+              <a href="/forgotPass" className="text-bright-yellow">Forgot password?</a>
             </div>
             <button type='submit' className="bg-green text-white rounded-md cursor-pointer block py-2 px-8 mx-auto mt-6 hover:bg-darkgreen">LOG IN</button>
             <p className="mt-6 text-white text-center">
               Don't have an account?
               <a href="/signup" className="text-bright-yellow ml-1">Sign up here</a>
-              </p>
+            </p>
           </div>
         </Box>
       </div>
