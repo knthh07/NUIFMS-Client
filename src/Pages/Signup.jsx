@@ -61,7 +61,7 @@ const Signup = () => {
       password: DOMPurify.sanitize(password),
     };
     try {
-      const response = await axios.post('/api/signup', sanitizedData);
+      const response = await axios.post('/api/signup', sanitizedData);  // Send only password, not confirmPassword
       const result = response.data;
       if (result.error) {
         toast.error(result.error);
@@ -223,7 +223,7 @@ const Signup = () => {
               </div>
             </div>
           ) : (
-            <div>
+            <div className="otp-container flex flex-col items-center space-y-4">
               <TextField
                 label="Enter OTP"
                 variant="filled"
@@ -231,8 +231,39 @@ const Signup = () => {
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
                 required
+                InputLabelProps={{
+                  style: { color: 'white' },
+                }}
+                sx={{
+                  input: { color: 'white' },
+                  '& .MuiFilledInput-root': {
+                    backgroundColor: 'transparent',
+                    borderBottom: '1px solid white',
+                  },
+                  '& .Mui-focused .MuiFilledInput-input': {
+                    backgroundColor: 'transparent',
+                  },
+                  '& .Mui-focused': {
+                    borderColor: 'white',
+                  },
+                  '& .MuiInputLabel-root.Mui-focused': {
+                    color: 'white',
+                  },
+                }}
               />
-              <Button onClick={verifyOtp} className="bg-[#5cb85c] text-white">Verify OTP</Button>
+              <Button
+                onClick={verifyOtp}
+                className="bg-[#5cb85c] hover:bg-[#449d44] text-white py-2 px-8 rounded-md"
+                fullWidth
+                sx={{
+                  backgroundColor: '#5cb85c',
+                  '&:hover': {
+                    backgroundColor: '#449d44',
+                  },
+                }}
+              >
+                Verify OTP
+              </Button>
             </div>
           )}
         </Box>
@@ -251,7 +282,14 @@ const Signup = () => {
           }}>
             <h2>Terms and Conditions</h2>
             <div ref={termsRef} style={{ height: '200px', overflowY: 'scroll', border: '1px solid gray', padding: '8px', marginBottom: '16px' }}>
-              {/* Terms and conditions content goes here */}
+              <p>[Welcome to NUIFMS! This privacy policy explains how we collect, use, disclose, and protect your personal information.
+                By using our app/website, you agree to the practices described in this policy.
+                nPersonal Information: This may include your name, email address, phone number, and any other information you provide directly.
+                nUsage Data: Information about how you use our app/website, including your IP address, browser type, and pages visited.
+                nWe implement reasonable security measures to protect your personal information from unauthorized access, alteration, disclosure, or destruction.
+                However, no data transmission over the internet or electronic storage system is 100% secure.
+                We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on our app/website.
+                Your continued use of our services after such changes indicates your acceptance of the updated policy]</p>
             </div>
             <div className="modal-buttons" style={{ display: 'flex', justifyContent: 'space-between' }}>
               <Button onClick={handleAccept} className="bg-[#5cb85c] text-white">Accept</Button>
