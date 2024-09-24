@@ -7,7 +7,7 @@ import { AuthContext } from '../../context/AuthContext';
 import DOMPurify from 'dompurify';
 import './login.css';
 import axios from 'axios';
-import signupLogoSrc from '../../assets/img/nu_logo.png'; // WebP format
+import signupLogoSrc from '../../assets/img/nu_logo.webp'; // WebP format
 import backgroundImage from '../../assets/img/jhocsonPic.jpg'; // WebP format
 
 const Login = () => {
@@ -80,7 +80,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: `url(${backgroundImage})` }}>
+    <div className="min-h-screen flex items-center justify-center bg-cover bg-center">
       <div className="bg-[#35408e] p-8 rounded-lg shadow-lg max-w-md w-full">
         <div className="flex justify-center mb-6">
           <img src={signupLogoSrc} alt="NU LOGO" className="w-36 h-auto" width="144" height="auto" />
