@@ -194,7 +194,7 @@ const Login = () => {
               <label className="text-white flex items-center"></label>
               <a href="/forgotPass" className="text-yellow-400 underline">Forgot password?</a>
             </div>
-            <button type='submit' className="bg-green-600 text-white rounded-md cursor-pointer block py-2 px-8 mx-auto mt-6 hover:bg-green-700">LOG IN</button>
+            <button type='submit' className="bg-green-800 text-white rounded-md cursor-pointer block py-2 px-8 mx-auto mt-6 hover:bg-green-900">LOG IN</button>
             <p className="mt-6 text-white text-center">
               Don't have an account?
               <a href="/signup" className="text-yellow-400 underline ml-1">Sign up here</a>
