@@ -146,15 +146,16 @@ const JobOrderTable = () => {
             const currentOrder = jobOrders.find(order => order._id === selectedOrder._id);
             const currentTracking = Array.isArray(currentOrder.tracking) ? currentOrder.tracking : [];
 
-            const newTracking = [...currentTracking, { status: trackingStatus, date: new Date(), note: trackingNote }];
+            // Create a new tracking entry
+            const newTrackingEntry = { status: trackingStatus, date: new Date(), note: trackingNote };
 
             await axios.patch(`/api/jobOrders/${selectedOrder._id}/tracking`, {
-                tracking: newTracking
+                tracking: [...currentTracking, newTrackingEntry] // Ensure to send the entire updated array
             }, { withCredentials: true });
 
             setJobOrders(jobOrders.map(order =>
                 order._id === selectedOrder._id
-                    ? { ...order, tracking: newTracking }
+                    ? { ...order, tracking: [...currentTracking, newTrackingEntry] } // Update the state
                     : order
             ));
             setTrackingModalOpen(false);
@@ -164,6 +165,7 @@ const JobOrderTable = () => {
             toast.error('Error adding tracking update');
         }
     };
+
 
     const formatDate = (date) => {
         if (!date) return '';
