@@ -28,9 +28,26 @@
   /* Ensure it is above other elements */
 }
 
-.imgLogo {
-  display: flex;
-  justify-content: center;
+.logo-image {
+  max-width: 100%;
+  /* Ensures the image does not overflow */
+  height: auto;
+  /* Keeps the image's aspect ratio */
+}
+
+/* Responsive adjustments for different screen sizes */
+@media (max-width: 768px) {
+  .logo-image {
+    max-width: 60%;
+    /* Adjust size for smaller screens */
+  }
+}
+
+@media (min-width: 769px) {
+  .logo-image {
+    max-width: 80%;
+    /* Adjust size for larger screens */
+  }
 }
 
 .navlinks {
@@ -92,11 +109,11 @@
 }
 
 .badge {
-  background-color: #f72a2a; 
-  color: #ffffff; 
-  padding: 0.2rem 0.5rem; 
-  font-size: 0.75rem; 
-  margin-left: 0.5rem; 
+  background-color: #f72a2a;
+  color: #ffffff;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+  margin-left: 0.5rem;
   margin-top: -0.5rem;
 }
 
@@ -118,12 +135,14 @@
 
 @media (max-width: 768px) {
   .imgLogo img {
-    max-width: 60%; /* Smaller size on smaller screens */
+    max-width: 60%;
+    /* Smaller size on smaller screens */
   }
 }
 
 @media (min-width: 769px) {
   .imgLogo img {
-    max-width: 80%; /* Adjust size for larger screens */
+    max-width: 80%;
+    /* Adjust size for larger screens */
   }
 }
