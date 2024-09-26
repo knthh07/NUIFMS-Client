@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
 import axios from 'axios';
-import './barchart.css';  // Import the external CSS
 
 export default function BarChartGraph() {
   const [data, setData] = useState({
@@ -33,9 +32,24 @@ export default function BarChartGraph() {
   }, []);
 
   return (
-    <Box className="bar-chart-container">
+    <Box
+      sx={{
+        padding: '20px',
+        backgroundColor: '#ffffff',
+        borderRadius: '8px',
+      }}
+    >
       {/* Render the heading first */}
-      <Typography variant="h6" className="chart-heading">
+      <Typography 
+        variant="h6" 
+        align="center" 
+        sx={{ 
+          marginBottom: '10px', 
+          fontSize: '1.2rem',  /* Reduce size slightly for faster render */
+          fontFamily: 'Arial, sans-serif', /* Use system font for quicker rendering */
+          fontWeight: 600, /* Preload this if using custom fonts */
+        }}
+      >
         Number of Job Requests in a Semester per Department
       </Typography>
 
@@ -48,11 +62,23 @@ export default function BarChartGraph() {
           margin={{ top: 100, bottom: 50, left: 60, right: 20 }}
           colors={['#4caf50', '#ff9800', '#f44336', '#2196f3']}
           sx={{
-            '& .MuiChart-legend': 'chart-legend',
-            '& .MuiChart-root': 'chart-root',
-            '& .MuiChart-bar': 'chart-bar',
+            '& .MuiChart-legend': {
+              display: 'flex',
+              justifyContent: 'center',
+              marginTop: '20px',
+            },
+            '& .MuiChart-root': {
+              padding: '20px',
+            },
+            '& .MuiChart-bar': {
+              borderRadius: '4px',
+            },
             '& .MuiChart-xAxis, & .MuiChart-yAxis': {
-              '& .MuiChart-tickLabel': 'chart-axis-label',
+              '& .MuiChart-tickLabel': {
+                fontSize: '0.875rem',
+                fontWeight: '500',
+                fill: '#333',
+              },
             },
           }}
         />
