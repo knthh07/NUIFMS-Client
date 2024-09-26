@@ -58,16 +58,8 @@ const SideNav = () => {
           ☰
         </button>
         <div className="imgLogo mt-4 mb-6">
-          <img
-            src={logo}
-            alt="NU LOGO"
-            className="logo-image"
-            width="200" // Specify width to improve LCP
-            height="100" // Specify height to maintain aspect ratio
-            loading="eager" // Ensures the logo loads as soon as possible
-          />
+          <img src={logo} alt="NU LOGO" className="max-w-full h-auto" loading='lazy'/>
         </div>
-
         <nav className="navlinks">
           <NavLink to="/AdminDashboard" location={location} icon={<AiOutlineDashboard />}>Dashboard</NavLink>
           <NavLink to="/request" location={location} icon={<AiOutlineFileText />}>
