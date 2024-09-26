@@ -41,7 +41,7 @@ export default function BarChartGraph() {
     >
       {/* Render the heading first */}
       <Typography 
-        variant="h6" 
+        variant="h2" 
         align="center" 
         sx={{ 
           marginBottom: '10px', 
