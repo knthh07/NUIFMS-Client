@@ -2,7 +2,7 @@ import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import axios from 'axios';
 
-// Lazy load the BarChart component
+// Lazy load the BarChart component from @mui/x-charts
 const BarChart = lazy(() => import('@mui/x-charts/BarChart'));
 
 export default function BarChartGraph() {
@@ -10,14 +10,17 @@ export default function BarChartGraph() {
     semesters: [],
     chartData: []
   });
+  const [isLoading, setIsLoading] = useState(true); // Loading state to handle async data fetch
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get('/api/jobOrders/ByDepartmentAndSemester');
         setData(response.data);
+        setIsLoading(false); // Set loading to false once data is fetched
       } catch (error) {
         console.error("Error fetching job requests data", error);
+        setIsLoading(false); // Set loading to false even if there's an error
       }
     };
 
@@ -32,12 +35,12 @@ export default function BarChartGraph() {
         borderRadius: '8px',
       }}
     >
-      <Typography variant="subtitle1" align="center" className="chart-title">
+      <Typography variant="subtitle1" align="center" className="chart-title" sx={{ marginBottom: '10px' }}>
         Number of Job Requests in a Semester per Department
       </Typography>
-      
-      {/* Show a loading message while data is being fetched */}
-      {data.chartData.length === 0 ? (
+
+      {isLoading ? (
+        // Display a loading message while waiting for the data
         <Typography variant="body1" align="center">
           Loading data...
         </Typography>
@@ -45,9 +48,9 @@ export default function BarChartGraph() {
         <Suspense fallback={<Typography variant="body1" align="center">Loading chart...</Typography>}>
           <BarChart
             series={data.chartData}
-            height={200}  // Reduced height for faster initial rendering
+            height={250} // Adjusted height
             xAxis={[{ data: data.semesters, scaleType: 'band' }]}
-            margin={{ top: 50, bottom: 40, left: 60, right: 20 }}  // Adjusted margins
+            margin={{ top: 50, bottom: 40, left: 60, right: 20 }}  // Adjusted margins for better layout
             colors={['#4caf50', '#ff9800', '#f44336', '#2196f3']}
             sx={{
               '& .MuiChart-legend': {
