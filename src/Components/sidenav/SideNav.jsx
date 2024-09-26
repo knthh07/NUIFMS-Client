@@ -57,7 +57,7 @@ const SideNav = () => {
         <button className="burger-menu" onClick={toggleNav}>
           ☰
         </button>
-        {/* <div className="imgLogo mt-4 mb-6">
+        <div className="imgLogo mt-4 mb-6">
           <img
             src={logo}
             alt="NU LOGO"
@@ -66,7 +66,7 @@ const SideNav = () => {
             height="100" // Specify height to maintain aspect ratio
             loading="eager" // Ensures the logo loads as soon as possible
           />
-        </div> */}
+        </div>
 
         <nav className="navlinks">
           <NavLink to="/AdminDashboard" location={location} icon={<AiOutlineDashboard />}>Dashboard</NavLink>
