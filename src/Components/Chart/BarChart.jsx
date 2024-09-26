@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { Box, Typography } from '@mui/material';
-import { BarChart } from '@mui/x-charts/BarChart';
 import axios from 'axios';
+
+// Lazy load the BarChart component
+const BarChart = lazy(() => import('@mui/x-charts/BarChart'));
 
 export default function BarChartGraph() {
   const [data, setData] = useState({
@@ -30,36 +32,46 @@ export default function BarChartGraph() {
         borderRadius: '8px',
       }}
     >
-      <Typography variant="h6" align="center" sx={{ marginBottom: '10px' }}>
+      <Typography variant="subtitle1" align="center" className="chart-title">
         Number of Job Requests in a Semester per Department
       </Typography>
-      <BarChart
-        series={data.chartData}
-        height={250}
-        xAxis={[{ data: data.semesters, scaleType: 'band' }]}
-        margin={{ top: 100, bottom: 50, left: 60, right: 20 }}
-        colors={['#4caf50', '#ff9800', '#f44336', '#2196f3']}
-        sx={{
-          '& .MuiChart-legend': {
-            display: 'flex',
-            justifyContent: 'center',
-            marginTop: '20px',
-          },
-          '& .MuiChart-root': {
-            padding: '20px',
-          },
-          '& .MuiChart-bar': {
-            borderRadius: '4px',
-          },
-          '& .MuiChart-xAxis, & .MuiChart-yAxis': {
-            '& .MuiChart-tickLabel': {
-              fontSize: '0.875rem',
-              fontWeight: '500',
-              fill: '#333',
-            },
-          },
-        }}
-      />
+      
+      {/* Show a loading message while data is being fetched */}
+      {data.chartData.length === 0 ? (
+        <Typography variant="body1" align="center">
+          Loading data...
+        </Typography>
+      ) : (
+        <Suspense fallback={<Typography variant="body1" align="center">Loading chart...</Typography>}>
+          <BarChart
+            series={data.chartData}
+            height={200}  // Reduced height for faster initial rendering
+            xAxis={[{ data: data.semesters, scaleType: 'band' }]}
+            margin={{ top: 50, bottom: 40, left: 60, right: 20 }}  // Adjusted margins
+            colors={['#4caf50', '#ff9800', '#f44336', '#2196f3']}
+            sx={{
+              '& .MuiChart-legend': {
+                display: 'flex',
+                justifyContent: 'center',
+                marginTop: '20px',
+              },
+              '& .MuiChart-root': {
+                padding: '20px',
+              },
+              '& .MuiChart-bar': {
+                borderRadius: '4px',
+              },
+              '& .MuiChart-xAxis, & .MuiChart-yAxis': {
+                '& .MuiChart-tickLabel': {
+                  fontSize: '0.875rem',
+                  fontWeight: '500',
+                  fill: '#333',
+                },
+              },
+            }}
+          />
+        </Suspense>
+      )}
     </Box>
   );
 }
