@@ -1,38 +1,35 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
 import axios from 'axios';
-
-// Skeleton component for perceived load time improvement
-const SkeletonLoader = () => (
-  <Box sx={{ height: '250px', backgroundColor: '#f0f0f0', borderRadius: '8px' }}></Box>
-);
 
 export default function BarChartGraph() {
   const [data, setData] = useState({
     semesters: [],
     chartData: []
   });
-  const [isLoading, setIsLoading] = useState(true);
+
+  const [isChartVisible, setIsChartVisible] = useState(false); // Defer chart loading
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get('/api/jobOrders/ByDepartmentAndSemester');
         setData(response.data);
-        setIsLoading(false); // Stop loading once data is fetched
       } catch (error) {
         console.error("Error fetching job requests data", error);
-        setIsLoading(false); // Stop loading even on error
       }
     };
 
     fetchData();
-  }, []);
 
-  // Memoize the data to avoid unnecessary re-renders
-  const chartMemo = useMemo(() => data.chartData, [data.chartData]);
-  const semesterMemo = useMemo(() => data.semesters, [data.semesters]);
+    // Defer chart rendering for better LCP
+    const timer = setTimeout(() => {
+      setIsChartVisible(true);
+    }, 500); // Delay chart load slightly
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <Box
@@ -42,19 +39,23 @@ export default function BarChartGraph() {
         borderRadius: '8px',
       }}
     >
-      <Typography variant="h6" align="center" sx={{ marginBottom: '10px' }}>
+      {/* Render the heading first */}
+      <Typography 
+        variant="h6" 
+        align="center" 
+        sx={{ marginBottom: '10px' }}
+        style={{ fontSize: '1.25rem' }} // Try reducing font size for faster render
+      >
         Number of Job Requests in a Semester per Department
       </Typography>
 
-      {/* Show skeleton loader while loading */}
-      {isLoading ? (
-        <SkeletonLoader />
-      ) : (
+      {/* Load the chart after the initial content */}
+      {isChartVisible && (
         <BarChart
-          series={chartMemo}
-          height={200} // Reduced chart height for faster paint
-          xAxis={[{ data: semesterMemo, scaleType: 'band' }]}
-          margin={{ top: 50, bottom: 50, left: 60, right: 20 }} // Reduced top margin for faster LCP
+          series={data.chartData}
+          height={250}
+          xAxis={[{ data: data.semesters, scaleType: 'band' }]}
+          margin={{ top: 100, bottom: 50, left: 60, right: 20 }}
           colors={['#4caf50', '#ff9800', '#f44336', '#2196f3']}
           sx={{
             '& .MuiChart-legend': {
