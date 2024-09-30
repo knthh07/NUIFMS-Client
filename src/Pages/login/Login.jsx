@@ -8,7 +8,9 @@ import DOMPurify from 'dompurify';
 import './login.css';
 import axios from 'axios';
 import signupLogoSrc from '../../assets/img/nu_logo.webp'; // WebP format
-import backgroundImage from '../../assets/img/jhocsonPic.jpg'; // WebP format
+import backgroundImage from '../../assets/img/bg.webp'; // WebP format
+import Loader from '../../hooks/Loader';
+
 
 const Login = () => {
   const { setProfile, setRole } = useContext(AuthContext);
