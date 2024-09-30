@@ -244,7 +244,10 @@ const JobOrderForm = () => {
                 toast.success('Job Order Submitted');
             }
         } catch (error) {
+            setIsLoading(false);
             console.log(error)
+            return toast.error('Server Error');
+
         }
     }, [jobOrder]);
 
@@ -429,6 +432,7 @@ const JobOrderForm = () => {
                             type="file"
                             hidden
                             onChange={handleFileChange}
+                            accept='image/jpeg, image/png'
                         />
                     </Button>
 

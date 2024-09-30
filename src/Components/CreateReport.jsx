@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { TextField, Snackbar, Button } from '@mui/material';
-import { Alert } from '@mui/material';
+import { TextField } from '@mui/material';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable'; // Import the plugin here
+import 'jspdf-autotable';
 import SideNav from '../Components/sidenav/SideNav';
+import { useCookies } from 'react-cookie';
 
 const CreateReport = () => {
     const [reportType, setReportType] = useState('day');
@@ -16,7 +16,30 @@ const CreateReport = () => {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [userId, setUserId] = useState('');
-    const [noResults, setNoResults] = useState(false);
+    const [selectedFields, setSelectedFields] = useState([]);
+    const [cookies] = useCookies(['token']);
+    const [userDetails, setUserDetails] = useState({ name: '', position: '', campus: '' });
+
+    useEffect(() => {
+        // Decode JWT and extract user information from cookies
+        const token = cookies.token;
+        if (token) {
+            const decoded = JSON.parse(atob(token.split('.')[1]));
+            setUserDetails({
+                name: decoded.name,
+                position: decoded.position,
+                campus: decoded.campus
+            });
+        }
+    }, [cookies]);
+
+    const handleFieldSelection = (field) => {
+        if (selectedFields.includes(field)) {
+            setSelectedFields(selectedFields.filter(f => f !== field));
+        } else {
+            setSelectedFields([...selectedFields, field]);
+        }
+    };
 
     const handleGenerateReport = async () => {
         try {
@@ -29,35 +52,33 @@ const CreateReport = () => {
             });
             const requests = response.data.requests;
 
-            if (requests.length === 0) {
-                setNoResults(true);
-                return;
-            }
-
             const doc = new jsPDF();
-            doc.setFontSize(22);
-            doc.text('Job Order Report', 10, 10);
-
+            // Header with Logo, User Info, Date, and Contact Information
+            doc.addImage('../assets/img/nu_logo.png', 'PNG', 10, 10, 50, 20); // You need to replace 'logo.png' with your logo
+            doc.setFontSize(16);
+            doc.text('Contact Info: 123 Main St, City, Phone: 123-456-7890', 10, 35);
             doc.setFontSize(14);
-            doc.text(`Report Type: ${reportType}`, 10, 20);
-            doc.text(`Status: ${status || 'All'}`, 10, 30);
-            doc.text(`Date Range: ${dateRange || 'N/A'}`, 10, 40);
-            doc.text(`User ID: ${userId || 'N/A'}`, 10, 50);
-            doc.text(`Generated on: ${new Date().toLocaleString()}`, 10, 60);
+            doc.text(`Name: ${userDetails.name}`, 10, 45);
+            doc.text(`Position: ${userDetails.position}`, 10, 55);
+            doc.text(`Campus: ${userDetails.campus}`, 10, 65);
+            doc.text(`Date: ${new Date().toLocaleString()}`, 10, 75);
+
+            // Table Header (selected fields)
+            const selectedColumns = selectedFields.length > 0 ? selectedFields : ['jobType', 'firstName', 'lastName', 'status'];
+            const tableHeaders = selectedColumns.map(field => field.toUpperCase());
+
+            const tableBody = requests.map(req => selectedColumns.map(field => req[field] || 'N/A'));
 
             doc.autoTable({
-                startY: 70,
-                head: [['ID', 'Name', 'Status', 'Date']],
-                body: requests.map(req => [
-                    req._id,
-                    `${req.firstName} ${req.lastName}`,
-                    req.status,
-                    new Date(req.createdAt).toLocaleDateString()
-                ])
+                startY: 80,
+                head: [tableHeaders],
+                body: tableBody,
             });
 
-            doc.text('________________________', 180, doc.autoTable.previous.finalY + 10, { align: 'right' });
-            doc.text('Signature', 180, doc.autoTable.previous.finalY + 20, { align: 'right' });
+            // Blank lines for Signature
+            const finalY = doc.autoTable.previous.finalY;
+            doc.text('________________________', 180, finalY + 10, { align: 'right' });
+            doc.text('Signature', 180, finalY + 20, { align: 'right' });
 
             doc.save('Job_Order_Report.pdf');
         } catch (error) {
@@ -65,14 +86,14 @@ const CreateReport = () => {
         }
     };
 
-    const handleResetFilters = () => {
+    const resetFilters = () => {
         setReportType('day');
         setSpecificTicket('');
         setStatus('');
         setStartDate(null);
         setEndDate(null);
         setUserId('');
-        setNoResults(false);
+        setSelectedFields([]);
     };
 
     return (
@@ -80,7 +101,8 @@ const CreateReport = () => {
             <div className="flex">
                 <div className="w-full">
                     <div className="w-[80%] ml-[20%] p-6">
-                        <h2 className="text-2xl mb-4">Report</h2>
+                        <h2 className="text-2xl mb-4">Generate Job Order Report</h2>
+                        {/* Report Type */}
                         <div className="mb-6">
                             <label htmlFor="reportType" className="block text-gray-700 font-semibold mb-2">Report Type:</label>
                             <select
@@ -94,6 +116,7 @@ const CreateReport = () => {
                                 <option value="month">Month</option>
                             </select>
                         </div>
+                        {/* Specific Ticket */}
                         <div className="mb-6">
                             <label htmlFor="specificTicket" className="block text-gray-700 font-semibold mb-2">Specific Ticket:</label>
                             <input
@@ -105,6 +128,7 @@ const CreateReport = () => {
                                 className="w-full p-2 border border-gray-300 rounded"
                             />
                         </div>
+                        {/* Status */}
                         <div className="mb-6">
                             <label htmlFor="status" className="block text-gray-700 font-semibold mb-2">Status:</label>
                             <select
@@ -120,6 +144,7 @@ const CreateReport = () => {
                                 <option value="pending">Pending</option>
                             </select>
                         </div>
+                        {/* Date Range */}
                         <div className="mb-6">
                             <label htmlFor="dateRange" className="block text-gray-700 font-semibold mb-2">Date Range:</label>
                             <div className="flex space-x-4">
@@ -139,6 +164,7 @@ const CreateReport = () => {
                                 />
                             </div>
                         </div>
+                        {/* User ID */}
                         <div className="mb-6">
                             <label htmlFor="userId" className="block text-gray-700 font-semibold mb-2">User ID:</label>
                             <input
@@ -150,7 +176,23 @@ const CreateReport = () => {
                                 className="w-full p-2 border border-gray-300 rounded"
                             />
                         </div>
-                        <div className="text-center">
+                        {/* Select Fields to Print */}
+                        <div className="mb-6">
+                            <label className="block text-gray-700 font-semibold mb-2">Select Fields to Print:</label>
+                            <div className="flex flex-wrap gap-2">
+                                {['jobType', 'firstName', 'lastName', 'reqOffice', 'campus', 'status', 'feedback'].map(field => (
+                                    <label key={field} className="block">
+                                        <input
+                                            type="checkbox"
+                                            value={field}
+                                            checked={selectedFields.includes(field)}
+                                            onChange={() => handleFieldSelection(field)}
+                                        /> {field}
+                                    </label>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="flex justify-center space-x-4">
                             <button
                                 onClick={handleGenerateReport}
                                 className="bg-gradient-to-r from-indigo-600 to-indigo-800 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition duration-150"
@@ -158,17 +200,12 @@ const CreateReport = () => {
                                 Generate Report
                             </button>
                             <button
-                                onClick={handleResetFilters}
-                                className="ml-4 bg-gray-300 text-black font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition duration-150"
+                                onClick={resetFilters}
+                                className="bg-gray-400 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition duration-150"
                             >
                                 Reset Filters
                             </button>
                         </div>
-                        <Snackbar open={noResults} autoHideDuration={6000} onClose={() => setNoResults(false)}>
-                            <Alert onClose={() => setNoResults(false)} severity="info">
-                                No job orders found for the selected filters!
-                            </Alert>
-                        </Snackbar>
                     </div>
                 </div>
             </div>
