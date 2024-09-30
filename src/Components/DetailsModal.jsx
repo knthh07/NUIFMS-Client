@@ -1,11 +1,11 @@
 import React from 'react';
 import { Box, Button, Modal, Typography } from '@mui/material';
 
-const DetailsModal = ({ open, onClose, request, onApprove, onReject }) => {
+const DetailsModal = ({ modalOpen, handleCloseModal, selectedRequest, handleApprove, handleOpenRejectModal }) => {
     return (
         <Modal
-            open={open}
-            onClose={onClose}
+            open={modalOpen}
+            onClose={handleCloseModal}
             aria-labelledby="request-details-modal-title"
             aria-describedby="request-details-modal-description"
         >
@@ -33,23 +33,40 @@ const DetailsModal = ({ open, onClose, request, onApprove, onReject }) => {
                     <Typography id="request-details-modal-title" variant="h6" component="h2">
                         Application Details
                     </Typography>
-                    {request && (
+                    {selectedRequest && (
                         <Box mt={2}>
-                            <Typography variant="body1"><strong>Requestor:</strong> {request.firstName} {request.lastName}</Typography>
-                            <Typography variant="body1"><strong>Requesting College/Office:</strong> {request.reqOffice}</Typography>
-                            <Typography variant="body1"><strong>Description:</strong> {request.jobDesc}</Typography>
-                            <Typography variant="body1"><strong>Building:</strong> {request.building}</Typography>
-                            <Typography variant="body1"><strong>Campus:</strong> {request.campus}</Typography>
-                            <Typography variant="body1"><strong>Floor:</strong> {request.floor}</Typography>
-                            <Typography variant="body1"><strong>Room:</strong> {request.room}</Typography>
-                            <Typography variant="body1"><strong>Date Requested:</strong> {new Date(request.createdAt).toLocaleDateString()}</Typography>
+                            <Typography variant="body1"><strong>Requestor:</strong> {selectedRequest.firstName} {selectedRequest.lastName}</Typography>
+                            <Typography variant="body1"><strong>Requesting College/Office:</strong> {selectedRequest.reqOffice}</Typography>
+                            <Typography variant="body1"><strong>Description:</strong> {selectedRequest.jobDesc}</Typography>
+                            <Typography variant="body1"><strong>Building:</strong> {selectedRequest.building}</Typography>
+                            <Typography variant="body1"><strong>Campus:</strong> {selectedRequest.campus}</Typography>
+                            <Typography variant="body1"><strong>Floor:</strong> {selectedRequest.floor}</Typography>
+                            <Typography variant="body1"><strong>Room:</strong> {selectedRequest.room}</Typography>
+                            <Typography variant="body1"><strong>Date Requested:</strong> {new Date(selectedRequest.createdAt).toLocaleDateString()}</Typography>
                             <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-                                <Button variant="contained" color="success" onClick={() => onApprove(request._id)}>Approve</Button>
-                                <Button variant="contained" color="error" onClick={() => onReject(request)}>Reject</Button>
+                                <Button variant="contained" color="success" onClick={() => handleApprove(selectedRequest._id)}>Approve</Button>
+                                <Button variant="contained" color="error" onClick={() => handleOpenRejectModal(selectedRequest)}>Reject</Button>
                             </Box>
                         </Box>
                     )}
                 </Box>
+                
+                {selectedRequest?.fileUrl && (
+                    <Box sx={{
+                        flex: 1,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        maxWidth: { xs: '100%', sm: '40%' },
+                        overflow: 'hidden'
+                    }}>
+                        <img
+                            src={`https://nuifms-predep-10ceea2df468.herokuapp.com/${selectedRequest.fileUrl}`}
+                            alt="Submitted File"
+                            style={{ width: '100%', height: 'auto', borderRadius: '4px' }}  // Added border radius for aesthetics
+                        />
+                    </Box>
+                )}
             </Box>
         </Modal>
     );
