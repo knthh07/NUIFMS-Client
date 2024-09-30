@@ -12,6 +12,7 @@ import backgroundImage from '../../assets/img/jhocsonPic.jpg'; // WebP format
 
 const Login = () => {
   const { setProfile, setRole } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [emailError, setEmailError] = useState('');
   const navigate = useNavigate();
@@ -49,11 +50,14 @@ const Login = () => {
         return;
       }
 
+      setIsLoading(true);
+
       const { data } = await axios.post('/api/login', { email, password });
 
       if (data.error) {
         toast.error(data.error);
       } else {
+        setIsLoading(false);
         setProfile(data.user);
         setRole(data.role);
 
@@ -63,6 +67,7 @@ const Login = () => {
     } catch (error) {
       console.error('Error logging in:', error.response ? error.response.data : error.message);
       toast.error('Invalid credentials or server error. Please try again.');
+      setIsLoading(false);
     }
   };
 
@@ -199,6 +204,7 @@ const Login = () => {
               className="bg-[#005a32] text-white rounded-md cursor-pointer block py-2 px-8 mx-auto mt-6 hover:bg-[#004126] border border-white">
               LOG IN
             </button>
+            <Loader isLoading={isLoading} />
             <p className="mt-6 text-white text-center">
               Don't have an account?
               <a href="/signup" className="text-yellow-400 underline ml-1">Sign up here</a>
