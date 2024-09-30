@@ -3,6 +3,7 @@ import { Box, Button, MenuItem, TextField, Typography, FormHelperText } from '@m
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
 import DOMPurify from 'dompurify';
+import Loader from '../../hooks/Loader';
 
 const data = {
     "National University Manila - Main": {
@@ -143,6 +144,7 @@ const JobOrderForm = () => {
         dateOfRequest: '', // New state for Date of Request
     });
 
+    const [isLoading, setIsLoading] = useState(false);
     const [buildings, setBuildings] = useState([]);
     const [floors, setFloors] = useState([]);
     const [rooms, setRooms] = useState([]);
@@ -184,10 +186,12 @@ const JobOrderForm = () => {
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
+                setIsLoading(true);
                 const response = await axios.get('/api/profile', { withCredentials: true });
                 const userData = response.data;
                 setJobOrder((prevJobOrder) => ({ ...prevJobOrder, firstName: userData.firstName, lastName: userData.lastName, position: userData.position }));
             } catch (error) {
+                setIsLoading(false);
                 console.error('Error fetching user profile:', error);
                 toast.error('Error fetching user profile');
             }
@@ -227,13 +231,17 @@ const JobOrderForm = () => {
                 formData.append('file', file);
             }
 
+            setIsLoading(true);
+
             const response = await axios.post('/api/addJobOrder', formData);
 
             const data = response.data;
 
             if (data.error) {
+                setIsLoading(false);
                 toast.error(result.error);
             } else {
+                setIsLoading(false);
                 setJobOrder(prev => ({ ...prev, reqOffice: '', campus: '', building: '', floor: '', room: '', jobDesc: '', file: null, jobType: '', scenario: '', object: '' }));
                 toast.success('Job Order Submitted');
             }
@@ -358,12 +366,12 @@ const JobOrderForm = () => {
                     {/* Additional dropdowns for Scenario and Object */}
                     <Box display="flex" gap={2} mb={2}>
                         <TextField
-                            select 
-                            label="Scenario" 
-                            variant="outlined" 
-                            fullWidth  
+                            select
+                            label="Scenario"
+                            variant="outlined"
+                            fullWidth
                             size="small"
-                            value={jobOrder.scenario} 
+                            value={jobOrder.scenario}
                             onChange={(e) => setJobOrder({ ...jobOrder, scenario: e.target.value })}
                         >
                             {scenarios.map((scenario) => (
@@ -374,11 +382,11 @@ const JobOrderForm = () => {
                         </TextField>
 
                         <TextField
-                            select label="Object" 
-                            variant="outlined" 
-                            fullWidth  
+                            select label="Object"
+                            variant="outlined"
+                            fullWidth
                             size="small"
-                            value={jobOrder.object} 
+                            value={jobOrder.object}
                             onChange={(e) => setJobOrder({ ...jobOrder, object: e.target.value })}
                         >
                             {objects.map((object) => (
@@ -429,6 +437,7 @@ const JobOrderForm = () => {
                     <div className="flex justify-start mt-4">
                         <Button type="submit" variant="contained" color="primary">Submit</Button>
                     </div>
+                    <Loader isLoading={isLoading} />
                 </div>
             </div>
         </Box>
