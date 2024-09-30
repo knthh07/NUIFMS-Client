@@ -164,9 +164,9 @@ const SuperAdminRequests = () => {
                     {/* Details Modal */}
                     <Suspense fallback={<Skeleton variant="rect" height={400} />}>
                         <DetailsModal
-                            open={modalOpen}
-                            onClose={handleCloseModal}
-                            request={selectedRequest}
+                            open={modalOpen}  // Ensure this is the correct prop
+                            onClose={handleCloseModal}  // Ensure this is the correct prop
+                            request={selectedRequest}  // Ensure this is the correct prop
                             onApprove={handleApprove}
                             onReject={handleOpenRejectModal}
                         />
