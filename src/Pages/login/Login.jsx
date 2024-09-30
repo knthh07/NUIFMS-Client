@@ -58,6 +58,7 @@ const Login = () => {
 
       if (data.error) {
         toast.error(data.error);
+        setIsLoading(false);
       } else {
         setIsLoading(false);
         setProfile(data.user);
@@ -69,7 +70,6 @@ const Login = () => {
     } catch (error) {
       console.error('Error logging in:', error.response ? error.response.data : error.message);
       toast.error('Invalid credentials or server error. Please try again.');
-      setIsLoading(false);
     }
   };
 
