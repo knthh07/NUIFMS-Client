@@ -1,23 +1,21 @@
-// src/components/Loader.js
 import React from 'react';
-import { ClipLoader } from 'react-spinners';
+import { Player } from '@lottiefiles/react-lottie-player';
+import animationData from './path-to-your-lottie-file.json';
 
 const Loader = ({ isLoading }) => {
   const loaderContainerStyle = {
     position: 'fixed',
     top: '10px',
     right: '10px',
-    zIndex: '9999', // Ensure loader is always on top
-    padding: '10px',
-    borderRadius: '10px',
-    backgroundColor: 'rgba(0, 0, 0, 0.1)', // Semi-transparent background
-    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.2)', // Soft shadow for depth
+    zIndex: '9999',
+    width: '60px',
+    height: '60px',
   };
 
   return (
     isLoading && (
       <div style={loaderContainerStyle}>
-        <ClipLoader color="#35408e" loading={isLoading} size={45} />
+        <Player autoplay loop src={animationData} style={{ width: '100%', height: '100%' }} />
       </div>
     )
   );
