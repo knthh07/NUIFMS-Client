@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import SuperAdminSideNav from '../Components/superAdmin_sidenav/superAdminSideNav';
+import SideNav from '../Components/sidenav/SideNav';
 import { Box, Pagination, Button, Modal, Typography, TextField } from '@mui/material';
 
 const SuperAdminRequests = () => {
@@ -72,44 +72,32 @@ const SuperAdminRequests = () => {
 
     return (
         <div className="flex">
-            <SuperAdminSideNav />
-            <div className="w-full">
-                <div className="w-[77%] ml-[21.5%] mt-8 bg-white rounded-lg shadow-md p-6">
-                    <h2 className="text-2xl mb-4">Requests</h2>
+            <SideNav />
+            <div className="flex flex-col w-full">
+                <div className="w-[80%] ml-[20%] p-6">
+                    <Typography variant="h5" gutterBottom>Applications</Typography>
                     {loading ? (
                         <div className="text-center">Loading...</div>
                     ) : (
                         <>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                                 {requests && requests.length > 0 ? (
                                     requests.map((request, index) => (
-                                        <div key={request._id || index} className="p-4 bg-white rounded-lg shadow-md">
-                                            <h5 className="font-bold">Requestor: {request.firstName} {request.lastName}</h5>
-                                            <p className="text-gray-600"><b>Requesting College/Office: </b>{request.reqOffice}</p>
-                                            <p className="text-gray-600"><b>Campus:</b> {request.campus}</p>
-                                            <Button
-                                                variant="contained"
-                                                onClick={() => handleOpenModal(request)}
-                                                className="mt-2"
-                                            >
-                                                View Details
-                                            </Button>
-                                            <Button
-                                                variant="contained"
-                                                color="success"
-                                                onClick={() => handleApprove(request._id)}
-                                                className="mt-2"
-                                            >
-                                                Approve
-                                            </Button>
-                                            <Button
-                                                variant="contained"
-                                                color="error"
-                                                onClick={() => handleOpenRejectModal(request)}
-                                                className="mt-2 ml-2"
-                                            >
-                                                Reject
-                                            </Button>
+                                        <div key={request._id || index} className="p-4 bg-white shadow-md">
+                                            <Typography variant="h6" className="font-bold">
+                                                Requestor: {request.firstName} {request.lastName}
+                                            </Typography>
+                                            <Typography className="text-gray-600">
+                                                <strong>Requesting College/Office:</strong> {request.reqOffice}
+                                            </Typography>
+                                            <div className="mt-2 flex space-x-2">
+                                                <Button
+                                                    variant="contained"
+                                                    onClick={() => handleOpenModal(request)}
+                                                >
+                                                    View Details
+                                                </Button>
+                                            </div>
                                         </div>
                                     ))
                                 ) : (
@@ -134,13 +122,13 @@ const SuperAdminRequests = () => {
                             top: '50%',
                             left: '50%',
                             transform: 'translate(-50%, -50%)',
-                            width: '90%',  // Use percentage for responsiveness
-                            maxWidth: 400,  // Maximum width for larger screens
+                            width: '90%',
+                            maxWidth: 400,
                             bgcolor: 'background.paper',
                             border: '2px solid #000',
                             boxShadow: 24,
                             p: 2,
-                            overflowY: 'auto' // Handle overflow
+                            overflowY: 'auto'
                         }}>
                             <Typography id="reject-reason-modal-title" variant="h6" component="h2">
                                 Reject Reason
@@ -177,35 +165,39 @@ const SuperAdminRequests = () => {
                             top: '50%',
                             left: '50%',
                             transform: 'translate(-50%, -50%)',
-                            width: '90%',  // Use percentage for responsiveness
-                            maxWidth: 800,  // Maximum width for larger screens
+                            width: '90%',
+                            maxWidth: 800,
                             bgcolor: 'background.paper',
                             border: '2px solid #000',
                             boxShadow: 24,
                             p: 2,
                             display: 'flex',
-                            flexDirection: { xs: 'column', sm: 'row' },  // Column on small screens, row on larger screens
-                            gap: 2,  // Space between items
+                            flexDirection: { xs: 'column', sm: 'row' },
+                            gap: 2,
                             overflow: 'hidden'
                         }}>
                             <Box sx={{
                                 flex: 1,
                                 overflowY: 'auto',
-                                maxWidth: { xs: '100%', sm: '60%' },  // Adjust width based on screen size
+                                maxWidth: { xs: '100%', sm: '60%' },
                             }}>
                                 <Typography id="request-details-modal-title" variant="h6" component="h2">
                                     Application Details
                                 </Typography>
                                 {selectedRequest && (
                                     <Box mt={2}>
-                                        <Typography variant="body1"><b>Requestor:</b> {selectedRequest.firstName} {selectedRequest.lastName}</Typography>
-                                        <Typography variant="body1"><b>Requesting College/Office:</b> {selectedRequest.reqOffice}</Typography>
-                                        <Typography variant="body1"><b>Description:</b> {selectedRequest.jobDesc}</Typography>
-                                        <Typography variant="body1"><b>Building:</b> {selectedRequest.building}</Typography>
-                                        <Typography variant="body1"><b>Campus:</b> {selectedRequest.campus}</Typography>
-                                        <Typography variant="body1"><b>Floor:</b> {selectedRequest.floor}</Typography>
-                                        <Typography variant="body1"><b>Room:</b> {selectedRequest.room}</Typography>
-                                        <Typography variant="body1"><b>Date Requested:</b> {new Date(selectedRequest.createdAt).toLocaleDateString()}</Typography>
+                                        <Typography variant="body1"><strong>Requestor:</strong> {selectedRequest.firstName} {selectedRequest.lastName}</Typography>
+                                        <Typography variant="body1"><strong>Requesting College/Office:</strong> {selectedRequest.reqOffice}</Typography>
+                                        <Typography variant="body1"><strong>Description:</strong> {selectedRequest.jobDesc}</Typography>
+                                        <Typography variant="body1"><strong>Building:</strong> {selectedRequest.building}</Typography>
+                                        <Typography variant="body1"><strong>Campus:</strong> {selectedRequest.campus}</Typography>
+                                        <Typography variant="body1"><strong>Floor:</strong> {selectedRequest.floor}</Typography>
+                                        <Typography variant="body1"><strong>Room:</strong> {selectedRequest.room}</Typography>
+                                        <Typography variant="body1"><strong>Date Requested:</strong> {new Date(selectedRequest.createdAt).toLocaleDateString()}</Typography>
+                                        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+                                            <Button variant="contained" color="success" onClick={() => handleApprove(selectedRequest._id)}>Approve</Button>
+                                            <Button variant="contained" color="error" onClick={() => handleOpenRejectModal(selectedRequest)}>Reject</Button>
+                                        </Box>
                                     </Box>
                                 )}
                             </Box>
@@ -215,7 +207,7 @@ const SuperAdminRequests = () => {
                                     display: 'flex',
                                     justifyContent: 'center',
                                     alignItems: 'center',
-                                    maxWidth: { xs: '100%', sm: '100%' },  // Adjust width based on screen size
+                                    maxWidth: { xs: '100%', sm: '40%' },
                                     overflow: 'hidden'
                                 }}>
                                     <img
@@ -234,4 +226,3 @@ const SuperAdminRequests = () => {
 };
 
 export default SuperAdminRequests;
-
