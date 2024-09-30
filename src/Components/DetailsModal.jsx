@@ -1,11 +1,11 @@
 import React from 'react';
 import { Box, Button, Modal, Typography } from '@mui/material';
 
-const DetailsModal = ({ modalOpen, handleCloseModal, selectedRequest, handleApprove, handleOpenRejectModal }) => {
+const DetailsModal = ({ open, onClose, request, onApprove, onReject }) => {
     return (
         <Modal
-            open={modalOpen}
-            onClose={handleCloseModal}
+            open={open}
+            onClose={onClose}
             aria-labelledby="request-details-modal-title"
             aria-describedby="request-details-modal-description"
         >
