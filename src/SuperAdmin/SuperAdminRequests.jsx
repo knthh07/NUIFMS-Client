@@ -91,12 +91,13 @@ const SuperAdminRequests = () => {
                                 {requests.length > 0 ? (
                                     requests.map((request) => (
                                         <div key={request._id} className="p-4 bg-white shadow-md">
-                                            <Typography className="text-gray-600">
+                                            <div className="text-gray-600">
                                                 <strong>Requestor:</strong> {request.firstName} {request.lastName}
-                                            </Typography>
-                                            <Typography className="text-gray-600">
+                                            </div>
+                                            <div className="text-gray-600">
                                                 <strong>Requesting College/Office:</strong> {request.reqOffice}
-                                            </Typography>
+                                            </div>
+
                                             <div className="mt-2 flex space-x-2">
                                                 <Button
                                                     variant="contained"
