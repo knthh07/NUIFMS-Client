@@ -84,7 +84,7 @@ const SuperAdminRequests = () => {
                                 {requests && requests.length > 0 ? (
                                     requests.map((request, index) => (
                                         <div key={request._id || index} className="p-4 bg-white shadow-md">
-                                            <Typography variant="h6" className="font-bold">
+                                            <Typography className="text-gray-600">
                                                 Requestor: {request.firstName} {request.lastName}
                                             </Typography>
                                             <Typography className="text-gray-600">
