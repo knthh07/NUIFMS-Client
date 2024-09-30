@@ -3,7 +3,8 @@ import axios from 'axios';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { TextField } from '@mui/material';
+import { TextField, Snackbar, Button } from '@mui/material';
+import { Alert } from '@mui/material';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable'; // Import the plugin here
 import SideNav from '../Components/sidenav/SideNav';
@@ -15,6 +16,7 @@ const CreateReport = () => {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [userId, setUserId] = useState('');
+    const [noResults, setNoResults] = useState(false);
 
     const handleGenerateReport = async () => {
         try {
@@ -26,6 +28,11 @@ const CreateReport = () => {
                 params: { reportType, specificTicket, status, dateRange, userId }
             });
             const requests = response.data.requests;
+
+            if (requests.length === 0) {
+                setNoResults(true);
+                return;
+            }
 
             const doc = new jsPDF();
             doc.setFontSize(22);
@@ -56,6 +63,16 @@ const CreateReport = () => {
         } catch (error) {
             console.error('Error generating report:', error);
         }
+    };
+
+    const handleResetFilters = () => {
+        setReportType('day');
+        setSpecificTicket('');
+        setStatus('');
+        setStartDate(null);
+        setEndDate(null);
+        setUserId('');
+        setNoResults(false);
     };
 
     return (
@@ -140,7 +157,18 @@ const CreateReport = () => {
                             >
                                 Generate Report
                             </button>
+                            <button
+                                onClick={handleResetFilters}
+                                className="ml-4 bg-gray-300 text-black font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition duration-150"
+                            >
+                                Reset Filters
+                            </button>
                         </div>
+                        <Snackbar open={noResults} autoHideDuration={6000} onClose={() => setNoResults(false)}>
+                            <Alert onClose={() => setNoResults(false)} severity="info">
+                                No job orders found for the selected filters!
+                            </Alert>
+                        </Snackbar>
                     </div>
                 </div>
             </div>
