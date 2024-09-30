@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import SideNav from '../Components/sidenav/SideNav';
+import SuperAdminSideNav from '../Components/superAdmin_sidenav/superAdminSideNav';
 import { Box, Pagination, Button, Modal, Typography, TextField } from '@mui/material';
 
 const SuperAdminRequests = () => {
@@ -72,7 +72,7 @@ const SuperAdminRequests = () => {
 
     return (
         <div className="flex">
-            <SideNav />
+            <SuperAdminSideNav />
             <div className="flex flex-col w-full">
                 <div className="w-[80%] ml-[20%] p-6">
                     <Typography variant="h5" gutterBottom>Applications</Typography>
@@ -85,7 +85,7 @@ const SuperAdminRequests = () => {
                                     requests.map((request, index) => (
                                         <div key={request._id || index} className="p-4 bg-white shadow-md">
                                             <Typography className="text-gray-600">
-                                                Requestor: {request.firstName} {request.lastName}
+                                            <strong>Requestor:</strong>{request.firstName} {request.lastName}
                                             </Typography>
                                             <Typography className="text-gray-600">
                                                 <strong>Requesting College/Office:</strong> {request.reqOffice}

@@ -58,8 +58,15 @@ const SuperAdminSideNav = () => {
           ☰
         </button>
         <div className="imgLogo mt-4 mb-6">
-          <img src={logo} alt="NU LOGO" className="max-w-full h-auto" loading='lazy' />
+          <img
+            src={logo}
+            alt="NU LOGO"
+            className="custom-img"
+            loading='lazy'
+            style={{ width: '100%', maxWidth: '300px', height: 'auto' }}
+          />
         </div>
+
         <nav className="navlinks">
           <NavLink to="/SuperAdminDashboard" location={location} icon={<AiOutlineDashboard />}>Dashboard</NavLink>
           <NavLink to="/SuperAdminRequests" location={location} icon={<AiOutlineFileText />}>
