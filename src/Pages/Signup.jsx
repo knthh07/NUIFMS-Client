@@ -33,12 +33,10 @@ const Signup = () => {
     try {
       const { email } = data;
       const sanitizedEmail = DOMPurify.sanitize(email);
-      setIsLoading(true);
       await axios.post('/api/signupOTP', { email: sanitizedEmail });
       setIsOtpStep(true);
       toast.success('OTP sent to your email.');
     } catch (error) {
-      setIsLoading(false);
       toast.error('Error sending OTP.');
     }
   };
