@@ -429,6 +429,7 @@ const JobOrderForm = () => {
                             type="file"
                             hidden
                             onChange={handleFileChange}
+                            accept="image/jpeg, image/png" // Accepts only JPEG and PNG files
                         />
                     </Button>
 
