@@ -5,9 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import signupLogoSrc from '../assets/img/nu_logo.webp';
 import backgroundImage from '../assets/img/jhocsonPic.jpg';
+import Loader from "../hooks/Loader";
 
 const AdditionalInfo = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [data, setData] = useState({
     firstName: '',
@@ -33,6 +35,7 @@ const AdditionalInfo = () => {
     console.log('Submitting form', data);
 
     try {
+      setIsLoading(true);
 
       const response = await axios.post('/api/addInfo', {
         firstName, lastName, dept, position, idNum1, idNum2
@@ -40,7 +43,9 @@ const AdditionalInfo = () => {
       const result = response.data;
       if (result.error) {
         toast.error(result.error);
+        setIsLoading(false);
       } else {
+        setIsLoading(false);
         setData({ firstName: '', lastName: '', dept: '', position: '', idNum1: '', idNum2: '' });
         toast.success('Additional Information Submitted!');
         navigate('/login');
@@ -246,6 +251,7 @@ const AdditionalInfo = () => {
             <button type='submit' className="bg-[#13aa52] text-white border-none rounded-md cursor-pointer block mx-auto px-4 py-2 mt-6">
               Submit
             </button>
+            <Loader isLoading={isLoading} />
           </div>
         </Box>
       </div>

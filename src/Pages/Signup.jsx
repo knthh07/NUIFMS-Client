@@ -203,6 +203,7 @@ const Signup = () => {
                 />
 
                 <button type='submit' className="bg-[#5cb85c] text-white border-none rounded-md cursor-pointer block py-2 px-8 mx-auto hover:bg-[#449D44]">Sign Up</button>
+                <Loader isLoading={isLoading} />
               </div>
             </div>
           ) : (
@@ -233,6 +234,7 @@ const Signup = () => {
               >
                 Verify OTP
               </Button>
+              <Loader isLoading={isLoading} />
             </div>
           )}
         </Box>
