@@ -60,7 +60,6 @@ const Login = () => {
         toast.error(data.error);
         setIsLoading(false);
       } else {
-        setIsLoading(false);
         setProfile(data.user);
         setRole(data.role);
 

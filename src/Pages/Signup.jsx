@@ -6,8 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import DOMPurify from 'dompurify';
 import signupLogoSrc from '../assets/img/nu_logo.webp';
+import Loader from "../hooks/Loader";
 
 const Signup = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [emailError, setEmailError] = useState('');
@@ -31,10 +33,12 @@ const Signup = () => {
     try {
       const { email } = data;
       const sanitizedEmail = DOMPurify.sanitize(email);
+      setIsLoading(true);
       await axios.post('/api/signupOTP', { email: sanitizedEmail });
       setIsOtpStep(true);
       toast.success('OTP sent to your email.');
     } catch (error) {
+      setIsLoading(false);
       toast.error('Error sending OTP.');
     }
   };
@@ -42,10 +46,13 @@ const Signup = () => {
   const verifyOtp = async () => {
     try {
       const { email } = data;
+      setIsLoading(true);
       const response = await axios.post('/api/verify-otp-signup', { email, otp });
       if (response.data.error) {
+        setIsLoading(false);
         toast.error(response.data.error);
       } else {
+        setIsLoading(false);
         registerUser(); // Proceed to registration after OTP verification
       }
     } catch (error) {
@@ -60,11 +67,14 @@ const Signup = () => {
       password: DOMPurify.sanitize(password),
     };
     try {
+      setIsLoading(true);
       const response = await axios.post('/api/signup', sanitizedData); // Send only password, not confirmPassword
       const result = response.data;
       if (result.error) {
+        setIsLoading(false);
         toast.error(result.error);
       } else {
+        setIsLoading(false);
         setData({ email: '', password: '', confirmPassword: '' });
         toast.success('Registration successful.');
         navigate('/addInfo');
