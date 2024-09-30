@@ -30,6 +30,13 @@ const DetailsModal = ({ open, onClose, request, onApprove, onReject }) => {
                     {request && (
                         <Box mt={2}>
                             <Typography variant="body1"><strong>Requestor:</strong> {request.firstName} {request.lastName}</Typography>
+                            <Typography variant="body1"><strong>Requesting College/Office:</strong> {selectedRequest.reqOffice}</Typography>
+                            <Typography variant="body1"><strong>Description:</strong> {selectedRequest.jobDesc}</Typography>
+                            <Typography variant="body1"><strong>Building:</strong> {selectedRequest.building}</Typography>
+                            <Typography variant="body1"><strong>Campus:</strong> {selectedRequest.campus}</Typography>
+                            <Typography variant="body1"><strong>Floor:</strong> {selectedRequest.floor}</Typography>
+                            <Typography variant="body1"><strong>Room:</strong> {selectedRequest.room}</Typography>
+                            <Typography variant="body1"><strong>Date Requested:</strong> {new Date(selectedRequest.createdAt).toLocaleDateString()}</Typography>
                             {/* Other request details */}
                             <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
                                 <Button variant="contained" color="success" onClick={() => onApprove(request._id)}>Approve</Button>
