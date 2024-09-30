@@ -37,6 +37,7 @@ const SuperAdminRequests = () => {
         try {
             await axios.patch(`/api/requests/${id}/approve`, {}, { withCredentials: true });
             setRequests(prevRequests => prevRequests.filter(request => request._id !== id));
+            handleCloseModal(); // Close the modal after approval
         } catch (error) {
             console.error('Error approving request:', error);
         }
@@ -48,11 +49,12 @@ const SuperAdminRequests = () => {
             setRequests(prevRequests => prevRequests.filter(request => request._id !== selectedRequest._id));
             setRejectModalOpen(false);
             setRejectReason("");
+            handleCloseModal(); // Close the modal after rejection
         } catch (error) {
             console.error('Error rejecting request:', error);
         }
     };
-
+    
     const handleOpenRejectModal = (request) => {
         setSelectedRequest(request);
         setRejectModalOpen(true);
