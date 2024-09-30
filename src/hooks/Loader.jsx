@@ -1,6 +1,6 @@
 import React from 'react';
 import { Player } from '@lottiefiles/react-lottie-player';
-import animationData from './path-to-your-lottie-file.json';
+import animationData from '../assets/animation/loader_lottie_1.json';
 
 const Loader = ({ isLoading }) => {
   const loaderContainerStyle = {
