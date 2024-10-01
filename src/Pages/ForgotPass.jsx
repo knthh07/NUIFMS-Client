@@ -4,15 +4,17 @@ import axios from 'axios';
 import { TextField, Box, Button, IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import signupLogoSrc from '../assets/img/nu_logo.webp';
-import backgroundImage from '../assets/img/jhocsonPic.jpg'; // Update the path to your background image
+import backgroundImage from '../assets/img/jhocsonPic.jpg';
+import toast from 'react-hot-toast'; // Import toast from react-hot-toast
+import ClipLoader from "react-spinners/ClipLoader"; // Import loader
 
 const ForgotPassword = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [otp, setOtp] = useState('');
     const [newPassword, setNewPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState(''); // State for confirm password
-    const [message, setMessage] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [loading, setLoading] = useState(false); // Loader state
     const [showOtpInput, setShowOtpInput] = useState(false);
     const [showPasswordInput, setShowPasswordInput] = useState(false);
 
@@ -20,70 +22,69 @@ const ForgotPassword = () => {
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    const handleEmailChange = (e) => {
-        setEmail(e.target.value);
-    };
+    const handleEmailChange = (e) => setEmail(e.target.value);
+    const handleOtpChange = (e) => setOtp(e.target.value);
+    const handleNewPasswordChange = (e) => setNewPassword(e.target.value);
+    const handleConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
 
-    const handleOtpChange = (e) => {
-        setOtp(e.target.value);
-    };
-
-    const handleNewPasswordChange = (e) => {
-        setNewPassword(e.target.value);
-    };
-
-    const handleConfirmPasswordChange = (e) => {
-        setConfirmPassword(e.target.value);
-    };
+    // Toast notifications
+    const showErrorToast = (message) => toast.error(message);
+    const showSuccessToast = (message) => toast.success(message);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true); // Start loading
         try {
             const response = await axios.post('/api/forgot-password', { email });
             if (response.status === 200) {
-                setMessage(`OTP sent to ${email}`);
+                showSuccessToast(`OTP sent to ${email}`);
                 setShowOtpInput(true);
-            } else {
-                setMessage(response.data.message || 'Error sending OTP');
-            }
+            } 
         } catch (error) {
-            setMessage('Server error, please try again later');
+            const errMsg = error.response?.data?.message || 'Server error, please try again later';
+            showErrorToast(errMsg);
+        } finally {
+            setLoading(false); // Stop loading
         }
     };
 
     const handleOtpSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         try {
             const response = await axios.post('/api/verify-otp', { email, otp });
             if (response.status === 200) {
-                setMessage('OTP verified successfully. You can now reset your password.');
+                showSuccessToast('OTP verified successfully. You can now reset your password.');
                 setShowOtpInput(false);
                 setShowPasswordInput(true);
-            } else {
-                setMessage(response.data.message || 'Invalid OTP');
             }
         } catch (error) {
-            setMessage('Server error, please try again later');
+            const errMsg = error.response?.data?.message || 'Server error, please try again later';
+            showErrorToast(errMsg);
+        } finally {
+            setLoading(false);
         }
     };
 
     const handlePasswordSubmit = async (e) => {
         e.preventDefault();
-        if (newPassword !== confirmPassword) { // Validate passwords
-            setMessage('Passwords do not match');
+        if (newPassword !== confirmPassword) {
+            showErrorToast('Passwords do not match');
             return;
         }
 
+        setLoading(true);
         try {
             const response = await axios.post('/api/reset-password', { email, otp, newPassword });
             if (response.status === 200) {
-                setMessage('Password reset successfully.');
-                navigate('/login'); // Redirect to login page or show a success message
-            } else {
-                setMessage(response.data.message || 'Error resetting password');
+                showSuccessToast('Password reset successfully.');
+                navigate('/login');
             }
         } catch (error) {
-            setMessage('Server error, please try again later');
+            const errMsg = error.response?.data?.message || 'Server error, please try again later';
+            showErrorToast(errMsg);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -93,33 +94,34 @@ const ForgotPassword = () => {
                 <div className="flex justify-center mb-6">
                     <img src={signupLogoSrc} alt="NU LOGO" className="w-36 h-auto" />
                 </div>
-                <Box component="form" autoComplete="off" noValidate onSubmit={showPasswordInput ? handlePasswordSubmit : (showOtpInput ? handleOtpSubmit : handleSubmit)}>
+                <Box
+                    component="form"
+                    autoComplete="off"
+                    noValidate
+                    onSubmit={showPasswordInput ? handlePasswordSubmit : (showOtpInput ? handleOtpSubmit : handleSubmit)}
+                >
                     <div id="input" className="space-y-6">
                         <h1 className="text-2xl font-bold underline text-white text-center">Reset Password</h1>
+                        
+                        {loading && (
+                            <div className="flex justify-center">
+                                <ClipLoader size={30} color={"#fff"} /> {/* Loader */}
+                            </div>
+                        )}
+
                         {!showOtpInput && !showPasswordInput && (
                             <div className="space-y-4">
                                 <TextField
                                     variant="filled"
                                     label="Email"
                                     fullWidth
-                                    InputLabelProps={{
-                                        style: { color: 'white' },
-                                    }}
+                                    InputLabelProps={{ style: { color: 'white' } }}
                                     sx={{
                                         input: { color: 'white' },
                                         '& .MuiFilledInput-root': {
                                             backgroundColor: 'transparent',
                                             borderBottom: '1px solid white',
                                         },
-                                        '& .Mui-focused .MuiFilledInput-input': {
-                                            backgroundColor: 'transparent',
-                                        },
-                                        '& .Mui-focused': {
-                                            borderColor: 'white',
-                                        },
-                                        '& .MuiInputLabel-root.Mui-focused': {
-                                            color: 'white',
-                                        }
                                     }}
                                     value={email}
                                     onChange={handleEmailChange}
@@ -133,24 +135,13 @@ const ForgotPassword = () => {
                                     variant="filled"
                                     label="Enter OTP"
                                     fullWidth
-                                    InputLabelProps={{
-                                        style: { color: 'white' },
-                                    }}
+                                    InputLabelProps={{ style: { color: 'white' } }}
                                     sx={{
                                         input: { color: 'white' },
                                         '& .MuiFilledInput-root': {
                                             backgroundColor: 'transparent',
                                             borderBottom: '1px solid white',
                                         },
-                                        '& .Mui-focused .MuiFilledInput-input': {
-                                            backgroundColor: 'transparent',
-                                        },
-                                        '& .Mui-focused': {
-                                            borderColor: 'white',
-                                        },
-                                        '& .MuiInputLabel-root.Mui-focused': {
-                                            color: 'white',
-                                        }
                                     }}
                                     value={otp}
                                     onChange={handleOtpChange}
@@ -166,24 +157,13 @@ const ForgotPassword = () => {
                                         label="New Password"
                                         type={showNewPassword ? 'text' : 'password'}
                                         fullWidth
-                                        InputLabelProps={{
-                                            style: { color: 'white' },
-                                        }}
+                                        InputLabelProps={{ style: { color: 'white' } }}
                                         sx={{
                                             input: { color: 'white' },
                                             '& .MuiFilledInput-root': {
                                                 backgroundColor: 'transparent',
                                                 borderBottom: '1px solid white',
                                             },
-                                            '& .Mui-focused .MuiFilledInput-input': {
-                                                backgroundColor: 'transparent',
-                                            },
-                                            '& .Mui-focused': {
-                                                borderColor: 'white',
-                                            },
-                                            '& .MuiInputLabel-root.Mui-focused': {
-                                                color: 'white',
-                                            }
                                         }}
                                         value={newPassword}
                                         onChange={handleNewPasswordChange}
@@ -199,7 +179,7 @@ const ForgotPassword = () => {
                                                         {showNewPassword ? <VisibilityOff /> : <Visibility />}
                                                     </IconButton>
                                                 </InputAdornment>
-                                            )
+                                            ),
                                         }}
                                     />
                                 </div>
@@ -210,24 +190,13 @@ const ForgotPassword = () => {
                                         label="Confirm Password"
                                         type={showConfirmPassword ? 'text' : 'password'}
                                         fullWidth
-                                        InputLabelProps={{
-                                            style: { color: 'white' },
-                                        }}
+                                        InputLabelProps={{ style: { color: 'white' } }}
                                         sx={{
                                             input: { color: 'white' },
                                             '& .MuiFilledInput-root': {
                                                 backgroundColor: 'transparent',
                                                 borderBottom: '1px solid white',
                                             },
-                                            '& .Mui-focused .MuiFilledInput-input': {
-                                                backgroundColor: 'transparent',
-                                            },
-                                            '& .Mui-focused': {
-                                                borderColor: 'white',
-                                            },
-                                            '& .MuiInputLabel-root.Mui-focused': {
-                                                color: 'white',
-                                            }
                                         }}
                                         value={confirmPassword}
                                         onChange={handleConfirmPasswordChange}
@@ -243,7 +212,7 @@ const ForgotPassword = () => {
                                                         {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                                                     </IconButton>
                                                 </InputAdornment>
-                                            )
+                                            ),
                                         }}
                                     />
                                 </div>
@@ -253,8 +222,6 @@ const ForgotPassword = () => {
                         <Button type="submit" variant="contained" color="primary" fullWidth className="mt-4">
                             {showPasswordInput ? 'Change Password' : (showOtpInput ? 'Verify OTP' : 'Reset Password')}
                         </Button>
-
-                        {message && <div className="mt-6 p-3 bg-gray-100 border border-gray-300 rounded-lg text-center text-gray-800">{message}</div>}
 
                         <Button onClick={() => navigate('/login')} variant="contained" color="primary" fullWidth className="mt-4">
                             Back
