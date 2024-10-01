@@ -29,19 +29,21 @@ const AdditionalInfo = () => {
 
   const UserAddInfo = async (e) => {
     e.preventDefault();
-
+  
     const { firstName, lastName, dept, position, idNum1, idNum2 } = data;
-
+  
     console.log('Submitting form', data);
-
+  
     try {
       setIsLoading(true);
-
+  
       const response = await axios.post('/api/addInfo', {
         firstName, lastName, dept, position, idNum1, idNum2
       });
       const result = response.data;
+      
       if (result.error) {
+        // Show specific error based on the message returned from backend
         toast.error(result.error);
         setIsLoading(false);
       } else {
@@ -55,6 +57,7 @@ const AdditionalInfo = () => {
       toast.error('Error submitting form');
     }
   };
+  
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">

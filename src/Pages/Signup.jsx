@@ -18,7 +18,7 @@ const Signup = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [data, setData] = useState({ email: '', password: '', confirmPassword: '' });
   const navigate = useNavigate();
-  
+
   const toggleShowPassword = () => setShowPassword(!showPassword);
   const toggleShowConfirmPassword = () => setShowConfirmPassword(!showConfirmPassword);
 
@@ -86,19 +86,28 @@ const Signup = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { password, confirmPassword } = data;
+    const { email, password, confirmPassword } = data;
 
+    // Check if all fields are filled
+    if (!email || !password || !confirmPassword) {
+      toast.error('Please fill in all required fields.');
+      return;
+    }
+
+    // Check if passwords match
     if (password !== confirmPassword) {
       toast.error('Passwords do not match.');
       return;
     }
 
+    // Check if terms and conditions are accepted
     if (!termsAccepted) {
       toast.error('You must accept the terms and conditions.');
       return;
     }
 
-    sendOtp(); // Send OTP before proceeding to registration
+    // Send OTP before proceeding to registration
+    sendOtp();
   };
 
   return (
