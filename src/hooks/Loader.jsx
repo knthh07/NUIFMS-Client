@@ -8,8 +8,8 @@ const Loader = ({ isLoading }) => {
     top: '10px',
     right: '10px',
     zIndex: '9999',
-    width: '120px',
-    height: '120px',
+    width: '80px',
+    height: '80px',
   };
 
   return (
