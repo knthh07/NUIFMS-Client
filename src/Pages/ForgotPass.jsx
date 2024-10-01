@@ -6,7 +6,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import signupLogoSrc from '../assets/img/nu_logo.webp';
 import backgroundImage from '../assets/img/jhocsonPic.jpg';
 import toast from 'react-hot-toast'; // Import toast from react-hot-toast
-import ClipLoader from "react-spinners/ClipLoader"; // Import loader
+import Loader from '../hooks/Loader';
 
 const ForgotPassword = () => {
     const navigate = useNavigate();
@@ -14,7 +14,7 @@ const ForgotPassword = () => {
     const [otp, setOtp] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [loading, setLoading] = useState(false); // Loader state
+    const [isLoading, setIsLoading] = useState(false);
     const [showOtpInput, setShowOtpInput] = useState(false);
     const [showPasswordInput, setShowPasswordInput] = useState(false);
 
@@ -33,24 +33,24 @@ const ForgotPassword = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true); // Start loading
+        setIsLoading(true); // Start loading
         try {
             const response = await axios.post('/api/forgot-password', { email });
             if (response.status === 200) {
                 showSuccessToast(`OTP sent to ${email}`);
                 setShowOtpInput(true);
-            } 
+            }
         } catch (error) {
             const errMsg = error.response?.data?.message || 'Server error, please try again later';
             showErrorToast(errMsg);
         } finally {
-            setLoading(false); // Stop loading
+            setIsLoading(false); // Stop loading
         }
     };
 
     const handleOtpSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
+        setIsLoading(true);
         try {
             const response = await axios.post('/api/verify-otp', { email, otp });
             if (response.status === 200) {
@@ -62,7 +62,7 @@ const ForgotPassword = () => {
             const errMsg = error.response?.data?.message || 'Server error, please try again later';
             showErrorToast(errMsg);
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     };
 
@@ -73,7 +73,7 @@ const ForgotPassword = () => {
             return;
         }
 
-        setLoading(true);
+        setIsLoading(true);
         try {
             const response = await axios.post('/api/reset-password', { email, otp, newPassword });
             if (response.status === 200) {
@@ -84,7 +84,7 @@ const ForgotPassword = () => {
             const errMsg = error.response?.data?.message || 'Server error, please try again later';
             showErrorToast(errMsg);
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     };
 
@@ -102,10 +102,10 @@ const ForgotPassword = () => {
                 >
                     <div id="input" className="space-y-6">
                         <h1 className="text-2xl font-bold underline text-white text-center">Reset Password</h1>
-                        
-                        {loading && (
+
+                        {isLoading && (
                             <div className="flex justify-center">
-                                <ClipLoader size={30} color={"#fff"} /> {/* Loader */}
+                                <Loader isLoading={isLoading} />
                             </div>
                         )}
 
