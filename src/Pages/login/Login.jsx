@@ -89,7 +89,7 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-cover bg-center">
       <div className="bg-[#35408e] p-8 rounded-lg shadow-lg max-w-md w-full">
         <div className="flex justify-center mb-6">
-          <img src={signupLogoSrc} alt="NU LOGO" className="w-36 h-auto" width="144" height="144" loading="lazy"/>
+          <img src={signupLogoSrc} alt="NU LOGO" className="w-36 h-auto" width="144" height="144"/>
         </div>
         <Box component="form" autoComplete='off' noValidate onSubmit={handleLogin}>
           <div id="input" className="space-y-6">
