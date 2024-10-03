@@ -1,12 +1,39 @@
-import React from 'react';
+// src/Pages/Dashboard.js
+import React, { useState, useEffect } from 'react';
 import SideNav from '../Components/sidenav/SideNav';
 import { Box, Typography, Card, CardContent, Grid } from '@mui/material';
 import AnalyticsDashboard from '../Components/DataAnalytics/AnalyticsDashboard';
 import BarChart from '../Components/Chart/BarChart';
 import PieChart from '../Components/Chart/PieChart';
 import LineChart from '../Components/Chart/LineChart';
+import AnnalyticsDashboard from '../Components/DataAnalytics/AnalyticsDashboard';
 
 const Dashboard = () => {
+  const [recommendations, setRecommendations] = useState([]);
+
+  useEffect(() => {
+    // This is where you can make your API call or logic for fetching recommendations
+    const fetchRecommendations = () => {
+      // Example recommendations; replace this with your real logic
+      setRecommendations([
+        {
+          office: 'Health Services',
+          scenario: 'Broken',
+          object: 'Computer',
+          action: 'Change the light bulb to improve work efficiency.',
+        },
+        {
+          office: 'Logistics',
+          scenario: 'Leaking',
+          object: 'Roof',
+          action: 'Fix the leaking roof to avoid further damage.',
+        },
+      ]);
+    };
+
+    fetchRecommendations();
+  }, []);
+
   return (
     <div className="flex">
       <SideNav />
@@ -26,6 +53,7 @@ const Dashboard = () => {
               <StatCard title="COM" value="0" />
             </Grid>
           </Grid>
+
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
               <ChartCard>
@@ -38,12 +66,12 @@ const Dashboard = () => {
               </ChartCard>
             </Grid>
           </Grid>
-          {/* Uncomment and adjust as needed
-          <Grid item xs={12} mt={5}>
-            <ChartCard>
-              <AnalyticsDashboard />
-            </ChartCard>
-          </Grid> */}
+
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <AnnalyticsDashboard recommendations={recommendations} />
+            </Grid>
+          </Grid>
         </div>
       </div>
     </div>
