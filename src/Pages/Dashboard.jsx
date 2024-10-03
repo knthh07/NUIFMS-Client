@@ -1,34 +1,31 @@
-// src/Pages/Dashboard.js
 import React, { useState, useEffect } from 'react';
+import axios from 'axios'; // Import axios
 import SideNav from '../Components/sidenav/SideNav';
 import { Box, Typography, Card, CardContent, Grid } from '@mui/material';
-import AnalyticsDashboard from '../Components/DataAnalytics/AnalyticsDashboard';
 import BarChart from '../Components/Chart/BarChart';
 import PieChart from '../Components/Chart/PieChart';
-import LineChart from '../Components/Chart/LineChart';
 import AnnalyticsDashboard from '../Components/DataAnalytics/AnalyticsDashboard';
 
 const Dashboard = () => {
   const [recommendations, setRecommendations] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // This is where you can make your API call or logic for fetching recommendations
-    const fetchRecommendations = () => {
-      // Example recommendations; replace this with your real logic
-      setRecommendations([
-        {
-          office: 'Health Services',
-          scenario: 'Broken',
-          object: 'Computer',
-          action: 'Change the light bulb to improve work efficiency.',
-        },
-        {
-          office: 'Logistics',
-          scenario: 'Leaking',
-          object: 'Roof',
-          action: 'Fix the leaking roof to avoid further damage.',
-        },
-      ]);
+    const fetchRecommendations = async () => {
+      try {
+        // Make API call using axios to get the job order analysis recommendations
+        const response = await axios.get('api/analytics/analyzeJobOrders');
+        
+        // Check if the response is successful
+        if (response.status === 200) {
+          setRecommendations(response.data.recommendations);
+        } else {
+          throw new Error('Failed to fetch recommendations');
+        }
+      } catch (err) {
+        console.error('Error fetching recommendations:', err);
+        setError(err.message);
+      }
     };
 
     fetchRecommendations();
@@ -69,7 +66,11 @@ const Dashboard = () => {
 
           <Grid container spacing={3}>
             <Grid item xs={12}>
-              <AnnalyticsDashboard recommendations={recommendations} />
+              {error ? (
+                <Typography color="error">{error}</Typography>
+              ) : (
+                <AnnalyticsDashboard recommendations={recommendations} />
+              )}
             </Grid>
           </Grid>
         </div>
