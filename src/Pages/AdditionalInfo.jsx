@@ -4,7 +4,6 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import signupLogoSrc from '../assets/img/nu_logo.webp';
-import backgroundImage from '../assets/img/jhocsonPic.jpg';
 import Loader from "../hooks/Loader";
 
 const AdditionalInfo = () => {
@@ -32,8 +31,6 @@ const AdditionalInfo = () => {
   
     const { firstName, lastName, dept, position, idNum1, idNum2 } = data;
   
-    console.log('Submitting form', data);
-  
     try {
       setIsLoading(true);
   
@@ -43,7 +40,6 @@ const AdditionalInfo = () => {
       const result = response.data;
       
       if (result.error) {
-        // Show specific error based on the message returned from backend
         toast.error(result.error);
         setIsLoading(false);
       } else {
@@ -53,7 +49,6 @@ const AdditionalInfo = () => {
         navigate('/login');
       }
     } catch (error) {
-      console.error('Error submitting form', error.response ? error.response.data : error.message);
       toast.error('Error submitting form');
     }
   };
@@ -74,6 +69,7 @@ const AdditionalInfo = () => {
                 variant='filled'
                 label='First Name'
                 fullWidth
+                aria-label="First Name" // Adding aria-label
                 InputLabelProps={{
                   style: { color: 'white' },
                 }}
@@ -102,6 +98,7 @@ const AdditionalInfo = () => {
                 variant='filled'
                 label='Last Name'
                 fullWidth
+                aria-label="Last Name" // Adding aria-label
                 InputLabelProps={{
                   style: { color: 'white' },
                 }}
@@ -127,14 +124,17 @@ const AdditionalInfo = () => {
               />
 
               <FormControl variant="filled" fullWidth>
-                <InputLabel style={{ color: 'white' }}>Department</InputLabel>
+                <InputLabel id="dept-label" style={{ color: 'white' }}>Department</InputLabel>
                 <Select
+                  labelId="dept-label"
+                  aria-labelledby="dept-label" // Associate label with the Select component
+                  aria-label="Department" // Adding aria-label
                   sx={{
                     '.MuiSelect-filled': {
-                      color: 'white', // Text color inside the Select component
+                      color: 'white',
                     },
                     '.MuiSelect-icon': {
-                      color: 'white', // Dropdown icon color
+                      color: 'white',
                     },
                     backgroundColor: 'transparent',
                     borderBottom: '1px solid white',
@@ -159,14 +159,17 @@ const AdditionalInfo = () => {
               </FormControl>
 
               <FormControl variant="filled" fullWidth>
-                <InputLabel style={{ color: 'white' }}>Position</InputLabel>
+                <InputLabel id="position-label" style={{ color: 'white' }}>Position</InputLabel>
                 <Select
+                  labelId="position-label"
+                  aria-labelledby="position-label" // Associate label with the Select component
+                  aria-label="Position" // Adding aria-label
                   sx={{
                     '.MuiSelect-filled': {
-                      color: 'white', // Text color inside the Select component
+                      color: 'white',
                     },
                     '.MuiSelect-icon': {
-                      color: 'white', // Dropdown icon color
+                      color: 'white',
                     },
                     backgroundColor: 'transparent',
                     borderBottom: '1px solid white',
@@ -196,6 +199,7 @@ const AdditionalInfo = () => {
                   variant='filled'
                   label='ID Number 1'
                   fullWidth
+                  aria-label="ID Number 1" // Adding aria-label
                   InputLabelProps={{
                     style: { color: 'white' },
                   }}
@@ -225,6 +229,7 @@ const AdditionalInfo = () => {
                   variant='filled'
                   label='ID Number 2'
                   fullWidth
+                  aria-label="ID Number 2" // Adding aria-label
                   InputLabelProps={{
                     style: { color: 'white' },
                   }}
